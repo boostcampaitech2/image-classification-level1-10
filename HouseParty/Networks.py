@@ -247,20 +247,6 @@ class ResNet(nn.Module):
 
         return out
 
-
-# def ResNet18():
-#     return ResNet(BasicBlock, [2,2,2,2])
-
-# def SpinalResNet18():
-#     return SpinalResNet(BasicBlock, [2,2,2,2])
-
-# def ResNet34():
-#     return ResNet(BasicBlock, [3, 4, 6, 3])
-
-# def SpinalResNet34():
-#     return SpinalResNet(BasicBlock, [3, 4, 6, 3])
-
-
 def ResNet18(device):
     return ResNet(BasicBlock, [2,2,2,2]).to(device)
 
