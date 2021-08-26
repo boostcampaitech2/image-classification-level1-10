@@ -14,6 +14,8 @@ import pandas as pd
 options = Options()
 opt = options.parse()
 
+test_cycle = 10
+
 class MaskModel():
     def __init__(self, opt):
         torch.manual_seed(0)
