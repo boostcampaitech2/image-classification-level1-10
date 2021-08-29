@@ -5,6 +5,7 @@ from importlib import import_module
 import pandas as pd
 import torch
 from torch.utils.data import DataLoader
+from tqdm import tqdm
 
 from dataset import TestDataset, MaskBaseDataset
 
@@ -54,7 +55,7 @@ def inference(data_dir, model_dir, output_dir, args):
     print("Calculating inference results..")
     preds = []
     with torch.no_grad():
-        for idx, images in enumerate(loader):
+        for idx, images in enumerate(tqdm(loader)):
             images = images.to(device)
             pred = model(images)
             pred = pred.argmax(dim=-1)
@@ -75,8 +76,8 @@ if __name__ == '__main__':
 
     # Container environment
     parser.add_argument('--data_dir', type=str, default=os.environ.get('SM_CHANNEL_EVAL', '/opt/ml/input/data/eval'))
-    parser.add_argument('--model_dir', type=str, default=os.environ.get('SM_CHANNEL_MODEL', './model'))
-    parser.add_argument('--output_dir', type=str, default=os.environ.get('SM_OUTPUT_DATA_DIR', './output'))
+    parser.add_argument('--model_dir', type=str, default=os.environ.get('SM_CHANNEL_MODEL', '/opt/ml/baseline/model'))
+    parser.add_argument('--output_dir', type=str, default=os.environ.get('SM_OUTPUT_DATA_DIR', '/opt/ml/baseline/output'))
 
     args = parser.parse_args()
 

@@ -10,7 +10,9 @@ import torch
 from PIL import Image
 from torch.utils.data import Dataset, Subset, random_split
 from torchvision import transforms
+from torchvision.transforms import functional
 from torchvision.transforms import *
+import cvlib as cv
 
 IMG_EXTENSIONS = [
     ".jpg", ".JPG", ".jpeg", ".JPEG", ".png",
@@ -336,9 +338,28 @@ class TestDataset(Dataset):
     def __getitem__(self, index):
         image = Image.open(self.img_paths[index])
 
+        img_width = image.size[0] # 384
+        img_height = image.size[1] # 512
+        bboxs, confidences = cv.detect_face(np.array(image), threshold=0.1)
+
+        center_crop_x = 150
+        center_crop_y = 200
+        bbox = [(img_width - center_crop_x) / 2, (img_height - center_crop_y) / 2, (img_width + center_crop_x) / 2, (img_height + center_crop_y) / 2]
+
+        for bbox, confidence in zip(bboxs, confidences):
+            if is_valid_bbox(bbox, img_width, img_height):
+                break
+
+        image = functional.crop(img = image, top=bbox[1], left=bbox[0], width=bbox[2] - bbox[0], height=bbox[3] - bbox[1])
         if self.transform:
             image = self.transform(image)
         return image
 
     def __len__(self):
         return len(self.img_paths)
+
+def is_valid_bbox(bbox, img_width, img_height, threshold_x=120, threshold_y=270, threshold_bbox_size=(0.05, 0.60)):
+    return img_width - threshold_x < (bbox[0] + bbox[2]) < img_width + threshold_x and \
+            img_height - threshold_y < (bbox[1] + bbox[3]) < img_height + threshold_y and \
+            bbox[0] > 0 and bbox[1] > 0 and bbox[2] < img_width and bbox[3] < img_height and \
+            min(threshold_bbox_size) < (bbox[2] - bbox[0]) * (bbox[3] - bbox[1]) / (img_width * img_height) < max(threshold_bbox_size)
