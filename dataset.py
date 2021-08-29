@@ -5,6 +5,7 @@ from enum import Enum
 from typing import Tuple, List
 
 import numpy as np
+import pickle
 import torch
 from PIL import Image
 from torch.utils.data import Dataset, Subset, random_split
@@ -49,16 +50,14 @@ class AddGaussianNoise(object):
     def __repr__(self):
         return self.__class__.__name__ + '(mean={0}, std={1})'.format(self.mean, self.std)
 
-
+# Assume that image is already cropped by bbox center.
 class CustomAugmentation:
-    def __init__(self, resize, mean, std, **args):
+    def __init__(self, mean, std, **args):
         self.transform = transforms.Compose([
-            CenterCrop((320, 256)),
-            Resize(resize, Image.BILINEAR),
-            ColorJitter(0.1, 0.1, 0.1, 0.1),
+            RandomHorizontalFlip(0.5),
+            RandomRotation(10),
             ToTensor(),
             Normalize(mean=mean, std=std),
-            AddGaussianNoise()
         ])
 
     def __call__(self, image):
@@ -123,16 +122,21 @@ class MaskBaseDataset(Dataset):
     mask_labels = []
     gender_labels = []
     age_labels = []
+    bbox = []
 
-    def __init__(self, data_dir, mean=(0.548, 0.504, 0.479), std=(0.237, 0.247, 0.246), val_ratio=0.2):
+    def __init__(self, data_dir, bbox_dir, resize, mean=(0.548, 0.504, 0.479), std=(0.237, 0.247, 0.246), val_ratio=0.2):
         self.data_dir = data_dir
+        self.bbox_dir = bbox_dir
+        self.resize = resize
         self.mean = mean
         self.std = std
         self.val_ratio = val_ratio
 
         self.transform = None
+
         self.setup()
         self.calc_statistics()
+
 
     def setup(self):
         profiles = os.listdir(self.data_dir)
@@ -184,7 +188,28 @@ class MaskBaseDataset(Dataset):
         age_label = self.get_age_label(index)
         multi_class_label = self.encode_multi_class(mask_label, gender_label, age_label)
 
-        image_transform = self.transform(image)
+        
+        if index < 15484: # train set index, hard-coding
+            bbox = self.bbox[index]
+            center = (bbox[1] + bbox[3]) / 2, (bbox[0] + bbox[2]) / 2
+            top_min = min(bbox[1], bbox[3] - self.resize[0])
+            left_min = min(bbox[0], bbox[2] - self.resize[1])
+            
+            center = np.random.normal(center[0], (center[0] - top_min) / 2), np.random.normal(center[1], (center[1] - left_min) / 2)
+            image_transform = functional.crop(img = image, top=center[0] - self.resize[0] / 2, left=center[1] - self.resize[1] / 2, width=self.resize[1], height=self.resize[0])
+
+            image_transform = self.transform(image_transform)
+        else: # validation set index, hard-coding
+            bbox = self.bbox[index]
+            image_transform = functional.crop(img = image, top=bbox[1], left=bbox[0], width=bbox[2] - bbox[0], height=bbox[3] - bbox[1])
+ 
+            image_transform = transforms.Compose([
+                    Resize(self.resize),
+                    ToTensor(),
+                    Normalize(mean=self.mean, std=self.std),
+            ])(image_transform)
+
+            
         return image_transform, multi_class_label
 
     def __len__(self):
@@ -244,9 +269,9 @@ class MaskSplitByProfileDataset(MaskBaseDataset):
         이후 `split_dataset` 에서 index 에 맞게 Subset 으로 dataset 을 분기합니다.
     """
 
-    def __init__(self, data_dir, mean=(0.548, 0.504, 0.479), std=(0.237, 0.247, 0.246), val_ratio=0.2):
+    def __init__(self, data_dir, bbox_dir, resize, mean=(0.548, 0.504, 0.479), std=(0.237, 0.247, 0.246), val_ratio=0.2):
         self.indices = defaultdict(list)
-        super().__init__(data_dir, mean, std, val_ratio)
+        super().__init__(data_dir, bbox_dir, resize, mean, std, val_ratio)
 
     @staticmethod
     def _split_profile(profiles, val_ratio):
@@ -264,6 +289,9 @@ class MaskSplitByProfileDataset(MaskBaseDataset):
         profiles = os.listdir(self.data_dir)
         profiles = [profile for profile in profiles if not profile.startswith(".")]
         split_profiles = self._split_profile(profiles, self.val_ratio)
+
+        with open(self.bbox_dir, 'rb') as f:
+            bboxs_dict = pickle.load(f)  
 
         cnt = 0
         for phase, indices in split_profiles.items():
@@ -286,9 +314,11 @@ class MaskSplitByProfileDataset(MaskBaseDataset):
                     self.mask_labels.append(mask_label)
                     self.gender_labels.append(gender_label)
                     self.age_labels.append(age_label)
+                    self.bbox.append(bboxs_dict['_'.join([profile, _file_name])])
 
                     self.indices[phase].append(cnt)
                     cnt += 1
+                    
 
     def split_dataset(self) -> List[Subset]:
         return [Subset(self, indices) for phase, indices in self.indices.items()]
