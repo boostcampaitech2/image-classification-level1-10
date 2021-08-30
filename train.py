@@ -10,6 +10,7 @@ from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
+from sklearn.metrics import f1_score
 import torch
 from torch.optim.lr_scheduler import StepLR
 from torch.utils.data import DataLoader
@@ -154,6 +155,7 @@ def train(data_dir, bbox_dir, model_dir, args):
 
     best_val_acc = 0
     best_val_loss = np.inf
+    best_val_f1 = 0
     for epoch in range(args.epochs):
         # train loop
         model.train()
@@ -197,14 +199,19 @@ def train(data_dir, bbox_dir, model_dir, args):
             model.eval()
             val_loss_items = []
             val_acc_items = []
+            y_true = torch.empty(len(val_set) - (len(val_set) % val_loader.batch_size), dtype=torch.int64, device=device)
+            y_pred = torch.empty(len(val_set) - (len(val_set) % val_loader.batch_size), dtype=torch.int64, device=device)
             figure = None
-            for val_batch in val_loader:
+            for idx, val_batch in enumerate(val_loader):
                 inputs, labels = val_batch
                 inputs = inputs.to(device)
                 labels = labels.to(device)
 
                 outs = model(inputs)
                 preds = torch.argmax(outs, dim=-1)
+
+                y_true[idx * len(labels):(idx+1) * len(labels)] = labels
+                y_pred[idx * len(preds):(idx+1) * len(preds)] = preds
 
                 loss_item = criterion(outs, labels).item()
                 acc_item = (labels == preds).sum().item()
@@ -220,18 +227,21 @@ def train(data_dir, bbox_dir, model_dir, args):
 
             val_loss = np.sum(val_loss_items) / len(val_loader)
             val_acc = np.sum(val_acc_items) / len(val_set)
+            val_f1 = f1_score(y_true.cpu(), y_pred.cpu(), average='macro')
             best_val_loss = min(best_val_loss, val_loss)
-            if val_acc > best_val_acc:
-                print(f"New best model for val accuracy : {val_acc:4.2%}! saving the best model..")
+            best_val_acc = min(best_val_acc, val_acc)
+            if val_f1 > best_val_f1:
+                print(f"New best model for val F1_Score : {val_f1:4.2%}! saving the best model..")
                 torch.save(model.module.state_dict(), f"{save_dir}/best.pth")
-                best_val_acc = val_acc
+                best_val_f1 = val_f1
             torch.save(model.module.state_dict(), f"{save_dir}/last.pth")
             print(
-                f"[Val] acc : {val_acc:4.2%}, loss: {val_loss:4.2} || "
-                f"best acc : {best_val_acc:4.2%}, best loss: {best_val_loss:4.2}"
+                f"[Val] acc : {val_acc:4.2%}, loss: {val_loss:4.2}, f1: {val_f1:4.2} || "
+                f"best acc : {best_val_acc:4.2%}, best loss: {best_val_loss:4.2}, best f1: {best_val_f1:4.2},"
             )
             logger.add_scalar("Val/loss", val_loss, epoch)
             logger.add_scalar("Val/accuracy", val_acc, epoch)
+            logger.add_scalar("Val/f1", val_f1, epoch)
             logger.add_figure("results", figure, epoch)
             print()
 
