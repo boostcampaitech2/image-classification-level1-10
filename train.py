@@ -229,7 +229,7 @@ def train(data_dir, bbox_dir, model_dir, args):
             val_acc = np.sum(val_acc_items) / len(val_set)
             val_f1 = f1_score(y_true.cpu(), y_pred.cpu(), average='macro')
             best_val_loss = min(best_val_loss, val_loss)
-            best_val_acc = min(best_val_acc, val_acc)
+            best_val_acc = max(best_val_acc, val_acc)
             if val_f1 > best_val_f1:
                 print(f"New best model for val F1_Score : {val_f1:4.2%}! saving the best model..")
                 torch.save(model.module.state_dict(), f"{save_dir}/best.pth")
