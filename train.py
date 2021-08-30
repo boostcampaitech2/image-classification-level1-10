@@ -162,21 +162,31 @@ def train(data_dir, bbox_dir, model_dir, args):
         loss_value = 0
         matches = 0
         for idx, train_batch in enumerate(train_loader):
-            inputs, labels = train_batch
+            inputs, (labels_mask, labels_gender, labels_age) = train_batch
             inputs = inputs.to(device)
-            labels = labels.to(device)
+            labels_mask = labels_mask.to(device)
+            labels_gender = labels_gender.to(device)
+            labels_age = labels_age.to(device)
 
             optimizer.zero_grad()
 
-            outs = model(inputs)
-            preds = torch.argmax(outs, dim=-1)
-            loss = criterion(outs, labels)
+            outs_mask, outs_gender, outs_age = model(inputs)
+            preds_mask = torch.argmax(outs_mask, dim=-1)
+            preds_gender = torch.argmax(outs_gender, dim=-1)
+            preds_age = torch.argmax(outs_age, dim=-1)
 
-            loss.backward()
+            loss_mask = criterion(outs_mask, labels_mask)
+            loss_gender = criterion(outs_gender, labels_gender)
+            loss_age = criterion(outs_age, labels_age)
+
+            loss_mask.backward(retain_graph=True)
+            loss_gender.backward(retain_graph=True)
+            loss_age.backward()
+
             optimizer.step()
 
-            loss_value += loss.item()
-            matches += (preds == labels).sum().item()
+            loss_value += (loss_mask.item() + loss_gender.item() + loss_age.item()) / 3
+            matches += ((preds_mask == labels_mask) & (preds_gender == labels_gender) & (preds_age == labels_age)).sum().item()
             if (idx + 1) % args.log_interval == 0:
                 train_loss = loss_value / args.log_interval
                 train_acc = matches / args.batch_size / args.log_interval
@@ -203,17 +213,29 @@ def train(data_dir, bbox_dir, model_dir, args):
             y_pred = torch.empty(len(val_set) - (len(val_set) % val_loader.batch_size), dtype=torch.int64, device=device)
             figure = None
             for idx, val_batch in enumerate(val_loader):
-                inputs, labels = val_batch
+                inputs, (labels_mask, labels_gender, labels_age)= val_batch
                 inputs = inputs.to(device)
-                labels = labels.to(device)
+                labels_mask = labels_mask.to(device)
+                labels_gender = labels_gender.to(device)
+                labels_age = labels_age.to(device)
+                labels = labels_mask * 6 + labels_gender * 3 + labels_age
+                
 
-                outs = model(inputs)
-                preds = torch.argmax(outs, dim=-1)
+
+                outs_mask, outs_gender, outs_age = model(inputs)
+                preds_mask = torch.argmax(outs_mask, dim=-1)
+                preds_gender = torch.argmax(outs_gender, dim=-1)
+                preds_age = torch.argmax(outs_age, dim=-1)
+                preds = preds_mask * 6 + preds_gender * 3 + preds_age
 
                 y_true[idx * len(labels):(idx+1) * len(labels)] = labels
                 y_pred[idx * len(preds):(idx+1) * len(preds)] = preds
 
-                loss_item = criterion(outs, labels).item()
+                loss_mask = criterion(outs_mask, labels_mask)
+                loss_gender = criterion(outs_gender, labels_gender)
+                loss_age = criterion(outs_age, labels_age)
+                loss_item = (loss_mask.item() + loss_gender.item() + loss_age.item()) / 3
+
                 acc_item = (labels == preds).sum().item()
                 val_loss_items.append(loss_item)
                 val_acc_items.append(acc_item)
@@ -261,7 +283,7 @@ if __name__ == '__main__':
     parser.add_argument("--resize", nargs="+", type=list, default=[128, 96], help='resize size for image when training')
     parser.add_argument('--batch_size', type=int, default=64, help='input batch size for training (default: 64)')
     parser.add_argument('--valid_batch_size', type=int, default=1000, help='input batch size for validing (default: 1000)')
-    parser.add_argument('--model', type=str, default='MyModel', help='model type (default: MyModel)')
+    parser.add_argument('--model', type=str, default='My3Model', help='model type (default: MyModel)')
     parser.add_argument('--optimizer', type=str, default='Adam', help='optimizer type (default: Adam)')
     parser.add_argument('--lr', type=float, default=1e-3, help='learning rate (default: 1e-3)')
     parser.add_argument('--val_ratio', type=float, default=0.2, help='ratio for validaton (default: 0.2)')

@@ -231,8 +231,9 @@ class MaskBaseDataset(Dataset):
         return Image.open(image_path)
 
     @staticmethod
-    def encode_multi_class(mask_label, gender_label, age_label) -> int:
-        return mask_label * 6 + gender_label * 3 + age_label
+    def encode_multi_class(mask_label, gender_label, age_label):
+
+        return mask_label, gender_label, age_label
 
     @staticmethod
     def decode_multi_class(multi_class_label) -> Tuple[MaskLabels, GenderLabels, AgeLabels]:

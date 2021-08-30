@@ -43,12 +43,13 @@ class MyModel(nn.Module):
         self.pretrained.fc = nn.Sequential(
             self.pretrained.fc,
             nn.ReLU(inplace = True),
-            nn.Dropout(p = 0.3),
+            # nn.Dropout(p = 0.5),
             nn.Linear(1000, 256, bias = True),
             nn.ReLU(inplace = True),
-            nn.Dropout(p = 0.3),
+            # nn.Dropout(p = 0.5),
             nn.Linear(256, num_classes, bias = True))
 
+        # initialize weight, bias
         for layer in self.pretrained.fc:
             if isinstance(layer, nn.Linear):
                 torch.nn.init.xavier_uniform_(layer.weight)
@@ -58,3 +59,67 @@ class MyModel(nn.Module):
 
     def forward(self, x):
         return self.pretrained(x)
+
+# Custom Model Template
+class My3Model(nn.Module):
+    def __init__(self, num_classes):
+        super().__init__()
+        self.resnet =  torchvision.models.resnext50_32x4d(pretrained=True)
+
+        # for param, weight in self.feature_extraction.named_parameters():
+        #     weight.requires_grad = False
+
+        self.mask_classifier = nn.Sequential(
+                                nn.ReLU(),
+                                nn.Dropout(p = 0.5),
+                                nn.Linear(1000, 256, bias = True),
+                                nn.ReLU(),
+                                nn.Dropout(p = 0.5),
+                                nn.Linear(256, 3, bias = True))
+            
+        self.gender_classifier = nn.Sequential(
+                                nn.ReLU(),
+                                nn.Dropout(p = 0.5),
+                                nn.Linear(1000, 256, bias = True),
+                                nn.ReLU(),
+                                nn.Dropout(p = 0.5),
+                                nn.Linear(256, 2, bias = True))
+        
+        self.age_classifier = nn.Sequential(
+                                nn.ReLU(),
+                                nn.Dropout(p = 0.5),
+                                nn.Linear(1000, 256, bias = True),
+                                nn.ReLU(),
+                                nn.Dropout(p = 0.5),
+                                nn.Linear(256, 3, bias = True))
+        
+        
+        
+        # initialize weight, bias
+        for layer in self.mask_classifier:
+            if isinstance(layer, nn.Linear):
+                torch.nn.init.xavier_uniform_(layer.weight)
+                stdv = 1.0 / (layer.in_features ** 0.5)
+                layer.bias.data.uniform_(-stdv,stdv)
+
+        for layer in self.gender_classifier:
+            if isinstance(layer, nn.Linear):
+                torch.nn.init.xavier_uniform_(layer.weight)
+                stdv = 1.0 / (layer.in_features ** 0.5)
+                layer.bias.data.uniform_(-stdv,stdv)
+                
+        for layer in self.age_classifier:
+            if isinstance(layer, nn.Linear):
+                torch.nn.init.xavier_uniform_(layer.weight)
+                stdv = 1.0 / (layer.in_features ** 0.5)
+                layer.bias.data.uniform_(-stdv,stdv)
+
+
+
+    def forward(self, x):
+        x = self.resnet(x)
+        mask = self.mask_classifier(x)
+        gender = self.gender_classifier(x)
+        age = self.age_classifier(x)
+
+        return mask, gender, age
