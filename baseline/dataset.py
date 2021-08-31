@@ -39,6 +39,7 @@ class ChoiDataset(Dataset) :
         self.istrain = istrain
         self.path_list = path_list
         self.label_list = label_list
+        # self.count = 0
         
         for path, label in tqdm.tqdm_notebook(zip(path_list, label_list)) :
             image = Image.open(path)
@@ -49,10 +50,14 @@ class ChoiDataset(Dataset) :
         X = []
         y = []
         temp_X = self.X[idx]
-        X.append(torch.tensor(self.transform(image = np.array(temp_X))['image'],dtype=torch.float))
+        X.append(self.transform(image = np.array(temp_X))['image'].clone().detach())
         y.append(torch.tensor(self.y[idx],dtype=torch.long))
         if self.istrain:
-            X.append(torch.tensor(self.aug_transform(image = np.array(temp_X))['image'],dtype=torch.tensor))
+            temp_img = self.aug_transform(image = np.array(temp_X))['image']
+            X.append(self.transform(image = np.array(temp_img))['image'].clone().detach())
+            # X.append(torch.tensor(self.transform(image = np.array(temp_img))['image'], dtype=torch.float))
+            # self.count += 1
+            # print(torch.tensor(self.aug_transform(image = np.array(temp_X))['image'],dtype=torch.float).size(), self.count, sep=' ')
             y.append(torch.tensor(self.y[idx], dtype=torch.long))
             return X,y
 

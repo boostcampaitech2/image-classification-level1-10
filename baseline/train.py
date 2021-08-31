@@ -8,6 +8,7 @@ import re
 import copy
 from importlib import import_module
 from pathlib import Path
+import tqdm
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -144,7 +145,6 @@ def train(data_dir, model_dir, args):
 
     # -- data_loader
     train_set, val_set = dataset.split_dataset()
-
     train_loader = DataLoader(
         train_set,
         batch_size=args.batch_size,
@@ -153,7 +153,6 @@ def train(data_dir, model_dir, args):
         pin_memory=use_cuda,
         drop_last=True,
     )
-
     val_loader = DataLoader(
         val_set,
         batch_size=args.valid_batch_size,
@@ -162,7 +161,8 @@ def train(data_dir, model_dir, args):
         pin_memory=use_cuda,
         drop_last=True,
     )
-
+    # print(multiprocessing.cpu_count()//2)
+    # exit()
     # -- model
     if args.model == 'load_model':
         model_path = '/opt/ml/models/EfficientNet_choi_two-fold-4.pth'
@@ -200,16 +200,20 @@ def train(data_dir, model_dir, args):
         model.train()
         loss_value = 0
         matches = 0
-        for idx, train_batch in enumerate(train_loader):
+        train_set.dataset.istrain = True
+        # print('start')
+        for idx, train_batch in tqdm.tqdm(enumerate(train_loader)):
             train_inputs, train_labels = train_batch
+            # print(f'train_input : {len(train_inputs)}')
             for inputs, labels in zip(train_inputs, train_labels):
-                print(inputs)
-                print(inputs.size())
+                # print(f'input size : {inputs.size()}')
+                # print('='*20)
                 inputs = inputs.to(device)
                 labels = labels.to(device)
                 optimizer.zero_grad()
-
+                # print('1'*30)
                 outs = model(inputs)
+                # print('2'*30)
                 preds = torch.argmax(outs, dim=-1)
                 loss = criterion(outs, labels)
 
@@ -241,10 +245,12 @@ def train(data_dir, model_dir, args):
             val_loss_items = []
             val_acc_items = []
             figure = None
+            val_set.dataset.istrain = False
             for val_batch in val_loader:
                 inputs, labels = val_batch
-                inputs = inputs.to(device)
-                labels = labels.to(device)
+                # print(f'validation_input : {len(inputs)}')
+                inputs = inputs[0].to(device)
+                labels = labels[0].to(device)
 
                 outs = model(inputs)
                 preds = torch.argmax(outs, dim=-1)
