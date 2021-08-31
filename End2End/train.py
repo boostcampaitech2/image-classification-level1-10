@@ -15,8 +15,8 @@ lr_scheduler
 '''
 
 batch_size = 128
-n_epochs = 100
-lr = 1e-4
+n_epochs = 15
+lr = 1e-3
 loss = 5
 f1 = 0.1
 
@@ -27,10 +27,11 @@ normal_data = Data.load_data(True, batch_size, name=None, expand=True)
 # normal_data = Data.NormalDataset(isTrain=True).get_loader(batch_size=batch_size)
 # normal_data = data.ProjectedLoader(name='age', isTrain=True, batch_size=batch_size)
 
-wandb.init(project="vgg19_128", config={
+wandb.init(project="vgg19_256", config={
     "learning_rate": lr,
     "architecture": model.__class__,
     "dataset": 'id_sep_val',
+    "project": 'Vgg19_cutmix_customLoss'
 })
 config = wandb.config
 
@@ -43,12 +44,14 @@ if torch.cuda.is_available():
 
 
 
-# optim = torch.optim.Adam(model.parameters(), lr=lr, weight_decay=0.1)
-optim = torch.optim.SGD(model.parameters(), lr=lr, momentum=0.9)
-criterion = Losses.FocalLoss(alpha=0.25)
-# lr_scheduler = CosineAnnealingLR(optim, T_max=50, eta_min=1e-12)
-lr_scheduler = CyclicLR(optim, base_lr=1e-7, step_size_up=5, max_lr=1e-4, 
-                                              gamma=0.5, mode='exp_range')
+optim = torch.optim.Adam(model.parameters(), lr=lr)
+# optim = torch.optim.SGD(model.parameters(), lr=lr, momentum=0.9)
+criterion = Losses.FocalLoss(alpha=1.25, gamma=2.2)
+criterion = Losses.FocalSmoothingLoss(total_epoch=n_epochs, gamma=3.0)
+# criterion = (alpha=0.25)
+lr_scheduler = CosineAnnealingLR(optim, T_max=n_epochs, eta_min=1e-7)
+# lr_scheduler = CyclicLR(optim, base_lr=1e-7, step_size_up=5, max_lr=1e-4, 
+#                                               gamma=0.5, mode='exp_range')
 
 print(f"[{'Epoch':<5} {'LR':<6} {'F1': <5} {'Loss':<6} {'Acc':<5}]")
 curr_acc = 0.10
@@ -67,9 +70,10 @@ for epoch in range(n_epochs):
         optim.zero_grad()
         loss.backward()
         optim.step()
-        lr_scheduler.step()
-        if idx % 26 == 0:
-            wandb.log({"learing_rate": lr, 'F1-Score': f1, 'Loss': loss, 'Accuracy': curr_acc})
+        wandb.log({"learing_rate": curr_lr})
+    wandb.log({'F1-Score': f1, 'Loss': loss, 'Accuracy': curr_acc})
+    lr_scheduler.step()
+    criterion.step_loss()
 
     model.eval()
     with torch.no_grad():
@@ -90,9 +94,9 @@ for epoch in range(n_epochs):
         if best_accuracy < curr_acc or best_f1 < curr_f1:
             best_accuracy = curr_acc
             best_f1 = curr_f1
-            if best_accuracy * 100 > 95 and best_f1 *100 > 90:
+            if best_f1 *100 > 75:
                 Logger.save_weights(state_dict=model.state_dict(), epoch=epoch, f1=f1, acc=best_accuracy)
-    wandb.log({'F1-Score': f1, 'Accuracy': curr_acc})
+    wandb.log({'F1-Score': curr_f1, 'Accuracy': curr_acc})
     
 
     Logger.write_logs(epoch, lr, f1, loss, curr_acc)

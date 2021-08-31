@@ -9,7 +9,7 @@ import albumentations as A
 import albumentations.pytorch as AP
 import numpy as np
 from PIL import Image
-import random
+from random import choices, randint
 
 dataroot = '/opt/ml/input/cropped'
 recur = False
@@ -21,14 +21,20 @@ print(f'[Basesize]:\t{basesize}')
 n_workers = {'train': 4, 'test': 4}
 
 baseA = A.Compose([
-    A.CoarseDropout(max_holes=3, max_height=40, max_width=40),
-    A.CoarseDropout(max_holes=1, max_height=100, max_width=70),
-    A.ElasticTransform(),
-    # A.GaussNoise(),
-    # A.GridDistortion(),
+    A.CoarseDropout(max_holes=2, max_height=int(basesize/7), max_width=int(basesize/7)),
+    A.CoarseDropout(max_holes=1, max_height=int(basesize/5), max_width=int(basesize/6), p=0.3),
+    A.ElasticTransform(alpha=1, sigma=15, alpha_affine=15, p=0.35),
     A.HorizontalFlip(),
     A.Normalize(mean=(0.5435222, 0.49131881, 0.4613538), std=(0.23546599, 0.23950848, 0.24674263)),
     AP.transforms.ToTensorV2(),
+])
+
+suplA = A.Compose([
+    A.Rotate(limit=30, p=0.8),
+    A.RandomBrightnessContrast(p=0.8),
+    A.GaussNoise(p=0.3),
+    A.GridDistortion(),
+    A.ElasticTransform(alpha=1, sigma=30, alpha_affine=30),
 ])
 
 maskT = copy.deepcopy(baseA)
@@ -37,6 +43,12 @@ gendT = copy.deepcopy(baseA)
 ageT  = copy.deepcopy(baseA)
 
 transform_dict = {'mask': maskT, 'gender': gendT, 'age': ageT}
+
+
+def onehot(y, n_classes=18):
+    onehot_label = [0] * n_classes
+    onehot_label[y] = 1
+    return np.array(onehot_label)
 
 def train_val_dataset(dataset, val_split=0.2):
     train_idx, val_idx = train_test_split(list(range(len(dataset))), test_size=val_split)
@@ -48,7 +60,7 @@ def train_val_dataset(dataset, val_split=0.2):
 def train_val_splits(dataset_class, val_split=0.2):
     all_imgs = glob(f'{dataroot}/train/**/*.*')
     ids = list(set([x.split('/')[-1].split('_')[0] for x in all_imgs]))
-    val_ids = random.choices(ids, k=int(len(ids)*val_split))
+    val_ids = choices(ids, k=int(len(ids)*val_split))
     tra_ids = list(set(ids) - set(val_ids))
     print(len(val_ids)/len(ids),  len(tra_ids)/len(ids))
     datasets = {}
@@ -56,14 +68,11 @@ def train_val_splits(dataset_class, val_split=0.2):
     datasets['val'] = dataset_class(isTrain=True, isVal=True, ids=val_ids)
     return datasets
 
-
-
-
 def load_data(isTrain, batch_size, name=None, expand=False):
     if isTrain:
         if name in ['mask', 'gender', 'age']:
             print('[Dataset]:\t ProjectedDataset loaded')
-            dataset = train_val_dataset(ProjectedDataset(name=name, isTrain=True))
+            # dataset = train_val_dataset(ProjectedDataset(name=name, isTrain=True))
         elif expand:
             print('[Dataset]:\t NormalDataset_oversampled loaded')
             dataset = train_val_splits(NormalDataset_oversampled, val_split=0.2)
@@ -83,7 +92,7 @@ def load_data(isTrain, batch_size, name=None, expand=False):
     else:
         if name in ['mask', 'gender', 'age']:
             print('[Dataset]:\t ProjectedDataset for TEST loaded')
-            dataset = ProjectedDataset(name=name, isTrain=False)
+            # dataset = ProjectedDataset(name=name, isTrain=False)
         else:
             print('[Dataset]:\t NormalDataset for TEST loaded')
             dataset = NormalDataset_oversampled(isTrain=False)
@@ -107,9 +116,11 @@ class NormalDataset_oversampled(Dataset):
         self.n_class = 18
         self.isTrain = isTrain
         self.isVal = isVal
-        self.expand_ratio = 0.4
-        self.supl_trans = None
+        self.expand_ratio = 0.5
         self.ids = ids
+        self.supl_min_idx = None
+        self.cutmix_prob = 0.5
+        print(f'[CutMix]:\t using CutMix with prob={self.cutmix_prob}')
         self._get_xy()
 
     def __len__(self):
@@ -121,15 +132,32 @@ class NormalDataset_oversampled(Dataset):
         X = self._preprocess(X)
         
         if self.isTrain:
+            y = onehot(self.y[idx])
+            if idx >= self.supl_min_idx:
+                X = suplA(image=X)['image']
+            elif randint(1,10)/10. <= self.cutmix_prob:
+                X, y = self._cutmix(X, y)
             X = baseA(image=X)['image']
-            return X, self.y[idx], fname
+            return X, y
         
         else:
             X = baseA(image=X)['image']
             return X, fname
-    
+    def _cutmix(self, X, y):
+        a = randint(int(basesize/5), int(basesize/5 * 3))
+        b = randint(a+int(basesize/7), int(basesize/5*4))
+
+        randIdx = randint(0,self.__len__()-1)
+        randImg = self._preprocess(np.array(Image.open(self.x[randIdx])))
+        X[:, a:b, :] = randImg[:, a:b, :]
+        
+        ratio = (b-a)/(basesize*3/5)
+        randLab = onehot(self.y[randIdx])
+
+        mixed_label = y*(1-ratio) + randLab*(ratio)
+        return X, mixed_label
+
     def _preprocess(self, X: str)->Image:
-        # X = A.CenterCrop(centsize,centsize)(image=X)['image']
         X = A.Resize(basesize,basesize)(image=X)['image']
         return X
 
@@ -145,6 +173,7 @@ class NormalDataset_oversampled(Dataset):
                         self.x.append(im_path)
                         self.y.append(cls)
             
+            self.supl_min_idx = len(self.x)-1
             if not self.isVal:
                 supl_nums = self.get_supl_num(cls_dist)
                 for cls, supl_num in enumerate(supl_nums):
@@ -152,7 +181,7 @@ class NormalDataset_oversampled(Dataset):
                     filtered_ids = [x if x.split('/')[-1].split('_')[0] in self.ids else '-1' for x in img_paths]
                     while '-1' in filtered_ids:
                         filtered_ids.remove('-1')
-                    supl_paths = random.choices(filtered_ids, k=supl_num)
+                    supl_paths = choices(filtered_ids, k=supl_num)
 
                     self.x.extend( supl_paths )
                     self.y.extend( [cls] * len(supl_paths) )
