@@ -13,12 +13,12 @@ import matplotlib.pyplot as plt
 
 from importlib import import_module
 from pathlib import Path
+from tqdm import tqdm
 
 import torch
 from torch.optim.lr_scheduler import StepLR
-from torch.utils.data import DataLoader
+from torch.utils.data import DataLoader, Dataset, Subset
 from torch.utils.tensorboard import SummaryWriter
-
 from sklearn.metrics import f1_score
 
 from dataset import MaskBaseDataset
@@ -108,7 +108,7 @@ def train_basic(data_dir, model_dir, args) :
     transform = transform_module(
         resize = args.resize,
         mean = dataset.mean,
-        std = dataset.std,
+        std = dataset.std
     )
     dataset.set_transform(transform)
 
@@ -118,7 +118,8 @@ def train_basic(data_dir, model_dir, args) :
     train_loader = DataLoader(
         train_set,
         batch_size = args.batch_size,
-        num_workers = multiprocessing.cpu_count() // 2,
+        #num_workers = multiprocessing.cpu_count() // 2,
+        num_workers = 0,
         shuffle = True,
         pin_memory = use_cuda,
         drop_last = True
@@ -127,7 +128,8 @@ def train_basic(data_dir, model_dir, args) :
     val_loader = DataLoader(
         val_set,
         batch_size = args.valid_batch_size,
-        num_workers = multiprocessing.cpu_count() // 2,
+        #num_workers = multiprocessing.cpu_count() // 2,
+        num_workers = 0,
         shuffle = False,
         pin_memory = use_cuda,
         drop_last = True
@@ -226,10 +228,10 @@ def train_basic(data_dir, model_dir, args) :
             best_val_loss = min(best_val_loss, val_loss)
             if val_acc > best_val_acc :
                 print(f'New best model for val accuracy : {val_acc:4.2%}! saving the best model..')
-                torch.save(model.module.state_dict(), f"{save_dir}/best.pth")
+                #torch.save(model.module.state_dict(), f"{save_dir}/best.pth")
                 best_Val_acc = val_acc
 
-            torch.save(model.module.state_dict(), f"{save_dir}/last.pth")
+            #torch.save(model.module.state_dict(), f"{save_dir}/last.pth")
             print(
                 f"[Val] acc : {val_acc:4.2%}, loss: {val_loss:4.2} ||"
                 f"best acc : {best_val_acc: 4.2%}, best loss: {best_val_loss:4.2}"
@@ -269,12 +271,35 @@ def train_fold(data_dir, model_dir, args) :
 
     # -- augmnetation
     transform_module = getattr(import_module('dataset'), args.augmentation) # default : BaseAugmentation
-    transform = transform_module(
-        resize = args.resize,
-        mean = dataset.mean,
-        std = dataset.std,
-    )
-    dataset.set_transform(transform)
+    if args.augmentation == 'CustomAugmentation_TV' :
+        train_transform = transform_module(
+                resize = args.resize,
+                mean = dataset.mean,
+                std = dataset.std,
+                train = True
+        )
+        valid_transform = transform_module(
+            resize = args.resize,
+            mean = dataset.mean,
+            std = dataset.std,
+            train = False,
+            valid = True
+        )
+        basic_transform = transform_module(
+            resize = args.resize,
+            mean = dataset.mean,
+            std = dataset.std,
+            train = False,
+            valid = False
+        )
+        dataset.set_transform(basic_transform)
+    else :
+        transform = transform_module(
+            resize = args.resize,
+            mean = dataset.mean,
+            std = dataset.std,
+        )
+        dataset.set_transform(transform)
 
     # -- model
     model_module = getattr(import_module('model'), args.model) # default : BaseModel
@@ -309,11 +334,15 @@ def train_fold(data_dir, model_dir, args) :
     oof_pred = None
     results = {}
 
+    if args.augmentation == 'CustomAugmentation_TV' :
+        TV = True
+    else :
+        TV = False
     # --data_loader ~ for문
     if args.fold == 'KFold' :
         train_set_list, val_set_list = dataset.kfold_split_dataset(fold = args.fold_number)
     elif args.fold == 'Stratified_KFold' :
-        train_set_list, val_set_list = dataset.Stratified_kfold_split_dataset(dataset = dataset, fold = args.fold_number)
+        train_set_list, val_set_list = dataset.Stratified_kfold_split_dataset(dataset = dataset, TV = TV, fold = args.fold_number)
     else :
         ValueError("You write another fold method, you need to change method or add it")
 
@@ -324,10 +353,14 @@ def train_fold(data_dir, model_dir, args) :
         best_val_f1 = 0
         best_val_loss = np.inf
 
+        train_set.set_transform(train_transform)
+        val_set.set_transform(valid_transform)
+
         train_loader = DataLoader(
             train_set,
             batch_size = args.batch_size,
-            num_workers = multiprocessing.cpu_count() // 2,
+            #num_workers = multiprocessing.cpu_count() // 2,
+            num_workers = 0,
             shuffle = True,
             pin_memory = use_cuda,
             drop_last = True
@@ -336,7 +369,8 @@ def train_fold(data_dir, model_dir, args) :
         val_loader = DataLoader(
             val_set,
             batch_size = args.valid_batch_size,
-            num_workers = multiprocessing.cpu_count() // 2,
+            #num_workers = multiprocessing.cpu_count() // 2,
+            num_workers = 0,
             shuffle = False,
             pin_memory = use_cuda,
             drop_last = True
@@ -390,7 +424,7 @@ def train_fold(data_dir, model_dir, args) :
                     current_lr = get_lr(optimizer)
                     print(
                         f"Epoch[{epoch}/{args.epochs}]({idx + 1}/{len(train_loader)}) || "
-                        f"training loss {train_loss:4.4} || training accuracy {train_acc:4.2%} || training f1 {train_f1:4.2%} lr {current_lr}"
+                        f"training loss {train_loss:4.4} || training accuracy {train_acc:4.2%} || training f1 {train_f1:4.2%} || lr {current_lr}"
                     )
                     logger.add_scalar('Train/loss', train_loss, epoch * len(train_loader) + idx)
                     logger.add_scalar('Train/accuracy', train_acc, epoch * len(train_loader) + idx)
@@ -445,19 +479,21 @@ def train_fold(data_dir, model_dir, args) :
                 best_val_f1 = max(best_val_f1, val_f1)
                 if val_acc > best_val_acc :
                     print(f'New best model for val accuracy : {val_acc:4.2%}! saving the best model..')
-                    #torch.save(model.module.state_dict(), f"{save_dir}/best.pth")
+                    torch.save(model.module.state_dict(), f"{save_dir}/best.pth")
                     best_val_acc = val_acc
-                if val_loss < best_val_loss :
-                    best_val_loss = val_loss
                     counter = 0
                 else :
                     counter += 1
+
+                if val_loss < best_val_loss :
+                    best_val_loss = val_loss
+                    counter = 0
 
                 if counter > patience :
                     print('Early Stopping...')
                     break
 
-                #torch.save(model.module.state_dict(), f"{save_dir}/last.pth")
+                torch.save(model.module.state_dict(), f"{save_dir}/last.pth")
                 print(
                     f"[Val] acc : {val_acc:4.2%}, loss: {val_loss:4.2}, f1: {float(val_f1):4.2%}|| "
                     f"best acc : {best_val_acc: 4.2%}, best loss: {best_val_loss:4.2}, best f1: {best_val_f1:4.2}"
@@ -482,23 +518,27 @@ def train_fold(data_dir, model_dir, args) :
         average_f1 += value[2]
     print(f'Loss Average {average_loss/args.fold_number:4.4} || Acc Average {average_acc/args.fold_number:4.2%} || F1 Average {average_f1/args.fold_number:4.2%}')
     
-    # TTA
-    # all_predictions = []
-    # with torch.no_grad() :
-    #     for images in test_loader :
-    #         images = images.to(device)
+    #TTA
+    all_predictions = []
+    with torch.no_grad() :
+        for images in test_loader :
+            images = images.to(device)
 
-    #         # TTA
-    #         pred = model(images) / 2               # 원본 이미지 예측
-    #         pred += model(torch.flip(images, [2])) / 2  # flip된 이미지 예측
-    #         all_predictions.extend(pred.cpu().numpy())
+            # TTA
+            pred = model(images) / 2               # 원본 이미지 예측
+            pred += model(torch.flip(images, [2])) / 2  # flip된 이미지 예측
+            all_predictions.extend(pred.cpu().numpy())
 
-    #     fold_pred = np.array(all_predictions)
+        fold_pred = np.array(all_predictions)
 
-    # if oof_pred is None :
-    #     oof_pred = fold_pred / args.fold_number
-    # else :
-    #     oof_pred += fold_pred / args.fold_number
+    if oof_pred is None :
+        oof_pred = fold_pred / args.fold_number
+    else :
+        oof_pred += fold_pred / args.fold_number
+
+    submission['ans'] = np.argmax(oof_pred, axis = 1)
+    submission.to_csv(os.path.join(test_dir, 'submission_3.csv'), index = False)
+    print('test inference is done!')
 
 if __name__ == '__main__' :
     parser = argparse.ArgumentParser()
@@ -512,7 +552,7 @@ if __name__ == '__main__' :
     parser.add_argument('--epochs', type = int, default = 1, help = 'number of epochs to train (default: 1)')
     parser.add_argument('--dataset', type = str, default = 'MaskBaseDataset', help = 'dataset type (default: MaskBaseDataset)')
     parser.add_argument('--augmentation', type = str, default = 'BaseAugmentation', help = 'dataset augmentation type (default: BaseAugmentation)')
-    parser.add_argument('--resize', nargs='+', type = list, default = [128, 96], help = 'resize size for image when training (default: [128, 96]])')
+    parser.add_argument('--resize', nargs='+', type = int, default = [128, 96], help = 'resize size for image when training (default: [128, 96]])')
     parser.add_argument('--batch_size', type = int, default = 64, help = 'input batch size for training (default: 64)')
     parser.add_argument('--valid_batch_size', type = int, default = 1000, help = 'input batch size for validate (default: 1000)')
     parser.add_argument('--model', type = str, default = 'BaseModel', help = 'model type (default: BaseModel)')
@@ -541,4 +581,35 @@ if __name__ == '__main__' :
         train_basic(data_dir, model_dir, args)
     else :
         ValueError("Fold Method is Wrong, you can use ['random_split', 'kfold', 'stratified-kfold']")
+
+    # ### Test Inference
+    # from model import CustomResnext_modify_2
+    # test_dir = '/opt/ml/input/data/eval'
+    # device = torch.device('cuda')
+
+    # new_model = CustomResnext_modify_2(18).to(device)
+    # new_model.load_state_dict(torch.load('/opt/ml/boostcamp/model/exp/best.pth'))
+
+    # submission = pd.read_csv(os.path.join(test_dir, 'info.csv'))
+    # image_dir = os.path.join(test_dir, 'images')
+
+    # image_paths = [os.path.join(image_dir, img_id) for img_id in submission.ImageID]
+    # T_dataset = TestDataset(image_paths, resize = args.resize)
+    # T_loader = DataLoader(T_dataset, shuffle = False)
+    
+    # new_model.eval()
+
+    # all_predictions = []
+    # for images in tqdm(T_loader) :
+    #     with torch.no_grad() :
+    #         images = images.to(device)
+    #         pred = new_model(images)
+    #         pred = pred.argmax(dim = -1)
+    #         all_predictions.extend(pred.cpu().numpy())
+    # submission['ans'] = all_predictions
+    # submission.to_csv(os.path.join(test_dir, 'submission_2.csv'), index = False)
+    # print('test inference is done!')
+
+
+
 

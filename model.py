@@ -36,7 +36,7 @@ class BaseModel(nn.Module) :
         return self.fc(x)
 
 
-class CustomResnet18_modify_1(nn.Module) :
+class CustomResnet_modify_1(nn.Module) :
     '''
     avgpool 이전까지만 가져와서 avgpool을 한 후 size를 조금 더 작게 출력한다.
     '''

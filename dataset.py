@@ -3,6 +3,9 @@ import random
 from collections import defaultdict
 from enum import Enum
 from typing import Tuple, List
+from tqdm import tqdm_notebook, tqdm
+from tqdm.std import tqdm
+from glob import glob
 
 import numpy as np
 import torch
@@ -10,6 +13,8 @@ from PIL import Image
 from torch.utils.data import Dataset, Subset, random_split
 from torchvision import transforms
 from torchvision.transforms import *
+
+from something import Subset_check
 
 IMG_EXTENSIONS = [
     '.jpg', '.JPG', '.jpeg', '.JPEG', '.png',
@@ -53,16 +58,48 @@ class CustomAugmentation:
             ColorJitter(0.1, 0.1, 0.1, 0.1),
             ToTensor(),
             Normalize(mean = mean, std = std),
-            AddGaussianNoise()
+            #AddGaussianNoise()
         ])
 
     def __call__(self, image) :
         return self.transform(image)
 
+class CustomAugmentation_TV:
+    def __init__(self, resize, mean, std, train = True, valid = False, **args) :
+        self.train_transform = transforms.Compose([
+            CenterCrop((320, 256)),
+            Resize(resize, Image.BILINEAR),
+            ColorJitter(0.1, 0.1, 0.1, 0.1),
+            ToTensor(),
+            Normalize(mean = mean, std = std),
+            #AddGaussianNoise()
+        ])
+        self.valid_transform = transforms.Compose([
+            CenterCrop((320, 256)),
+            Resize(resize, Image.BILINEAR),
+            ToTensor(),
+            Normalize(mean = mean, std = std)
+        ])
+        self.basic_transform = transforms.Compose([
+            Resize(resize, Image.BILINEAR),
+            ToTensor(),
+            Normalize(mean = mean, std = std)
+        ])
+        self.train = train
+        self.valid = valid
+
+    def __call__(self, image) :
+        if self.train :
+            return self.train_transform(image)
+        elif self.valid :
+            return self.valid_transform(image)
+        else :
+            return self.basic_transform(image)
+
 class MaskLabels(int, Enum) :
     Mask = 0
-    INCORRECT = 0
-    NORMAL = 0
+    INCORRECT = 1
+    NORMAL = 2
 
 class GenderLabels(int, Enum) :
     MALE = 0
@@ -115,13 +152,13 @@ class MaskBaseDataset(Dataset) :
     gender_labels = []
     age_labels = []
 
-    def __init__(self, data_dir, mean = (0.548, 0.504, 0.479), std = (0.237, 0.247, 0.246), val_ratio = 0.2) :
+    def __init__(self, data_dir, transform = None, mean = (0.548, 0.504, 0.479), std = (0.237, 0.247, 0.246), val_ratio = 0.2) :
         self.data_dir = data_dir
         self.mean = mean
         self.std = std
         self.val_ratio = val_ratio
 
-        self.transform = None
+        self.transform = transform
         self.setup()
         self.calc_statistics()
 
@@ -129,6 +166,7 @@ class MaskBaseDataset(Dataset) :
         '''
         폴더 순서대로 각 이미지들의 image_path, mask, age, gender label을 추출한다.
         '''
+
         profiles = os.listdir(self.data_dir)
         for profile in profiles :
             if profile.startswith('.') : # '.'으로 시작하는 파일을 무시한다.
@@ -240,19 +278,74 @@ class MaskBaseDataset(Dataset) :
             val_set_list.append(Subset(self, val_idx))
         return train_set_list, val_set_list 
     
-    def Stratified_kfold_split_dataset(self, dataset, fold = 5) -> Tuple[list, list] :
+    def Stratified_kfold_split_dataset(self, dataset, TV = False, fold = 5) -> Tuple[list, list] :
         from sklearn.model_selection import StratifiedKFold
         labels = [dataset.encode_multi_class(mask, gender, age) for mask, gender, age in zip(dataset.mask_labels, dataset.gender_labels, dataset.age_labels)]
         skf = StratifiedKFold(n_splits = fold, shuffle = True) # seed는 train에서 맨 처음 정의하고 넘어간다.
         train_set_list, val_set_list = [], []
-        for train_idx, val_idx in skf.split(dataset.image_paths, labels) :
-            train_set_list.append(Subset(self, train_idx))
-            val_set_list.append(Subset(self, val_idx))
+        if TV == False :
+            for train_idx, val_idx in skf.split(dataset.image_paths, labels) :
+                train_set_list.append(Subset(self, train_idx))
+                val_set_list.append(Subset(self, val_idx))
+        else :
+            for train_idx, val_idx in skf.split(dataset.image_paths, labels) :
+                train_set_list.append(Subset_check(self, train_idx))
+                val_set_list.append(Subset_check(self, val_idx))
         return train_set_list, val_set_list 
 
-# class MaskBaseDataset_Aug(MaskBaseDataset) :
-#     def __init__(self, data_dir, mean = (0.548, 0.504, 0.479), std = (0.237, )) :
-#         super().__init__(data_dir, mean, std, val_ratio)
+class MaskBaseDataset_Aug(MaskBaseDataset) :
+    def __init__(self, data_dir, mean = (0.548, 0.504, 0.479), std = (0.237, ), val_ratio = 0.2) :
+        super().__init__(data_dir, mean, std, val_ratio)
+        
+        self.X = []
+        self.y = []
+        self.aug_transform = transforms.Compose([
+            RandomHorizontalFlip(),
+            ColorJitter(0.5, 0.5, 0.5),
+            GaussianBlur(kernel_size = (5,9), sigma = (0.1, 5)),
+            RandomRotation(degrees = (-30, 30)),
+        ])
+        
+        self.add_aug_image()
+
+    def add_aug_image(self) :
+        for path, age, gender, mask in tqdm(zip(self.image_paths, self.age_labels, self.gender_labels, self.mask_labels)) :
+            image = Image.open(path)
+            label = self.encode_multi_class(mask, gender, age)
+            
+            self.X.append(image)
+            self.y.append(label)
+            if label == 14 or label == 8 :
+                for _ in range(20) :
+                    self.y.append(label)
+                    self.X.append(transforms.ToPILImage()(self.aug_transform(transforms.ToTensor()(image))))
+            if label == 11 or label == 17 :
+                for _ in range(16) :
+                    self.y.append(label)
+                    self.X.append(transforms.ToPILImage()(self.aug_transform(transforms.ToTensor()(image))))
+            if label == 2 or label == 7 :
+                for _ in range(4) :
+                    self.y.append(label)
+                    self.X.append(transforms.ToPILImage()(self.aug_transform(transforms.ToTensor()(image))))
+            if label == 5 or label == 12 or label == 6 :
+                for _ in range(3) :
+                    self.y.append(label)
+                    self.X.append(transforms.ToPILImage()(self.aug_transform(transforms.ToTensor()(image))))
+            if label == 15 or label == 9 or label == 10 or label == 16 :
+                for _ in range(2) :
+                    self.y.append(label)
+                    self.X.append(transforms.ToPILImage()(self.aug_transform(transforms.ToTensor()(image))))
+
+    def __len__(self) :
+        len_dataset = len(self.X)
+        return len_dataset
+    
+    def __getitem__(self, idx) :
+        image = self.X[idx]
+        label = self.y[idx]
+        image_transform = self.transform(image)
+        return image_transform, label
+     
 class MaskSplitByProfileDataset(MaskBaseDataset) :
     '''
     train, val을 나누는 기준을 이미지에 대해서 random이 아닌 사람(profile)을 기준으로 나눈다.
@@ -325,6 +418,7 @@ class TestDataset(Dataset) :
     def __init__(self, img_paths, resize, mean = (0.548, 0.504, 0.479), std = (0.237, 0.247, 0.246)) :
         self.img_paths = img_paths
         self.transform = transforms.Compose([
+            CenterCrop((320,256)),
             Resize(resize, Image.BILINEAR),
             ToTensor(),
             Normalize(mean = mean, std = std)
