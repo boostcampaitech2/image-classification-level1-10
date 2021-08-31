@@ -57,8 +57,12 @@ def inference(data_dir, model_dir, output_dir, args):
     with torch.no_grad():
         for idx, images in enumerate(tqdm(loader)):
             images = images.to(device)
-            pred = model(images)
-            pred = pred.argmax(dim=-1)
+            pred_mask, pred_gender, pred_age = model(images)
+
+            pred_mask = pred_mask.argmax(dim=-1)
+            pred_gender = pred_gender.argmax(dim=-1)
+            pred_age = pred_age.argmax(dim=-1)
+            pred = pred_mask * 6 + pred_gender * 3 + pred_age
             preds.extend(pred.cpu().numpy())
 
     info['ans'] = preds
@@ -72,7 +76,7 @@ if __name__ == '__main__':
     # Data and model checkpoints directories
     parser.add_argument('--batch_size', type=int, default=1000, help='input batch size for validing (default: 1000)')
     parser.add_argument('--resize', type=tuple, default=(96, 128), help='resize size for image when you trained (default: (96, 128))')
-    parser.add_argument('--model', type=str, default='MyModel', help='model type (default: MyModel)')
+    parser.add_argument('--model', type=str, default='My3Model', help='model type (default: MyModel)')
 
     # Container environment
     parser.add_argument('--data_dir', type=str, default=os.environ.get('SM_CHANNEL_EVAL', '/opt/ml/input/data/eval'))
