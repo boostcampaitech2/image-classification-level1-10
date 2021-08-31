@@ -1,7 +1,7 @@
 import os
 import torch
 
-ex_name = 'Effi_again'
+ex_name = 'Vgg19_128'
 log_path = f'./logs/{ex_name}.txt'
 print(f'Logging to -> {log_path}')
 

@@ -41,7 +41,7 @@ for cls in range(18):
     # for idx, img_paths in enumerate(cls_imgs):
     for img_paths in tqdm(cls_imgs, desc=f'{cls: >3}'):
         img = Image.open(img_paths)
-        # img = cv2.imread(img_paths)
+        # img = cv2.imread(img_paths) BGRA
         # img = cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
         boxes,probs = mtcnn.detect(img)
         if isinstance(boxes, np.ndarray):

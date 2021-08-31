@@ -1,0 +1,5 @@
+[default]
+entity = ark10806
+project = vgg19_128
+base_url = https://api.wandb.ai
+

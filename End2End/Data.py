@@ -16,6 +16,7 @@ recur = False
 
 #efficientnet_b2 256
 basesize = 256
+print(f'[Basesize]:\t{basesize}')
 # centsize = 320
 n_workers = {'train': 4, 'test': 4}
 
@@ -49,9 +50,10 @@ def train_val_splits(dataset_class, val_split=0.2):
     ids = list(set([x.split('/')[-1].split('_')[0] for x in all_imgs]))
     val_ids = random.choices(ids, k=int(len(ids)*val_split))
     tra_ids = list(set(ids) - set(val_ids))
+    print(len(val_ids)/len(ids),  len(tra_ids)/len(ids))
     datasets = {}
-    datasets['train'] = NormalDataset_oversampled(isTrain=True, ids=tra_ids)
-    datasets['val'] = NormalDataset_oversampled(isTrain=True, ids=val_ids)
+    datasets['train'] = dataset_class(isTrain=True, ids=tra_ids)
+    datasets['val'] = dataset_class(isTrain=True, isVal=True, ids=val_ids)
     return datasets
 
 
@@ -97,13 +99,14 @@ def load_data(isTrain, batch_size, name=None, expand=False):
 
 
 class NormalDataset_oversampled(Dataset):
-    def __init__(self, isTrain, ids=None):
+    def __init__(self, isTrain, isVal=False, ids=None):
         super().__init__()
         self.x = []
         self.y = []
         self.dataroot = dataroot
         self.n_class = 18
         self.isTrain = isTrain
+        self.isVal = isVal
         self.expand_ratio = 0.4
         self.supl_trans = None
         self.ids = ids
@@ -119,7 +122,7 @@ class NormalDataset_oversampled(Dataset):
         
         if self.isTrain:
             X = baseA(image=X)['image']
-            return X, self.y[idx]
+            return X, self.y[idx], fname
         
         else:
             X = baseA(image=X)['image']
@@ -142,16 +145,17 @@ class NormalDataset_oversampled(Dataset):
                         self.x.append(im_path)
                         self.y.append(cls)
             
-            supl_nums = self.get_supl_num(cls_dist)
-            for cls, supl_num in enumerate(supl_nums):
-                img_paths = glob(f'{train_root}/{cls}/*.*')
-                filtered_ids = [x if x.split('/')[-1].split('_')[0] in self.ids else '-1' for x in img_paths]
-                while '-1' in filtered_ids:
-                    filtered_ids.remove('-1')
-                supl_paths = random.choices(filtered_ids, k=supl_num)
+            if not self.isVal:
+                supl_nums = self.get_supl_num(cls_dist)
+                for cls, supl_num in enumerate(supl_nums):
+                    img_paths = glob(f'{train_root}/{cls}/*.*')
+                    filtered_ids = [x if x.split('/')[-1].split('_')[0] in self.ids else '-1' for x in img_paths]
+                    while '-1' in filtered_ids:
+                        filtered_ids.remove('-1')
+                    supl_paths = random.choices(filtered_ids, k=supl_num)
 
-                self.x.extend( supl_paths )
-                self.y.extend( [cls] * len(supl_paths) )
+                    self.x.extend( supl_paths )
+                    self.y.extend( [cls] * len(supl_paths) )
             
 
         
