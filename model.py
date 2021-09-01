@@ -75,7 +75,8 @@ class My3Model(nn.Module):
                                 nn.Linear(1000, 256, bias = True),
                                 nn.ReLU(),
                                 nn.Dropout(p = 0.5),
-                                nn.Linear(256, 3, bias = True))
+                                nn.Linear(256, 3, bias = True)
+                                )
             
         self.gender_classifier = nn.Sequential(
                                 nn.ReLU(),

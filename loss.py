@@ -65,11 +65,63 @@ class F1Loss(nn.Module):
         return 1 - f1.mean()
 
 
+class CustomLoss(nn.Module):
+    def __init__(self, weight=None,
+                 gamma=2.):
+        nn.Module.__init__(self)
+        self.weight = weight
+        self.gamma = gamma
+
+    def forward(self, input_tensor, target_tensor):
+        log_prob = F.log_softmax(input_tensor, dim=-1)
+        prob = torch.exp(log_prob)
+        temp = ((1 - prob) ** self.gamma) * log_prob
+        if self.weight is not None:
+            temp = temp * torch.tensor(self.weight).to(temp.device) / sum(self.weight)
+
+        return torch.mean(torch.sum(-target_tensor * temp, dim=-1))
+        # return F.nll_loss(
+        #     ((1 - prob) ** self.gamma) * log_prob,
+        #     target_tensor,
+        #     weight=self.weight,
+        #     reduction=self.reduction
+        # )
+    #     self.confidence = 1.0 - smoothing
+    #     self.smoothing = smoothing
+    #     self.dim = dim
+    #     self.gamma = 2
+
+    # def forward(self, pred, target, weight=None):
+    #     classes = pred.shape[1]
+    #     log_pred = pred.log_softmax(dim=self.dim)
+    #     pred = torch.exp(log_pred)
+
+    #     if classes == 3: # mask and age
+    #         true_dist = torch.zeros_like(pred)
+    #         true_dist.scatter_(1, target.data.unsqueeze(1), self.confidence)
+    #         for n in true_dist:
+    #             if n[1] != 0:
+    #                 n[0], n[2] = self.smoothing / 2, self.smoothing / 2
+    #             else:
+    #                 n[1] = self.smoothing
+    #     else: # classes == 2 (gender)
+    #         with torch.no_grad():
+    #             true_dist = torch.zeros_like(pred)
+    #             true_dist.fill_(self.smoothing / (classes - 1))
+    #             true_dist.scatter_(1, target.data.unsqueeze(1), self.confidence)
+
+    #     temp = ((1 - pred) ** self.gamma) * log_pred
+    #     if weight is not None:
+    #         temp = temp * torch.tensor(weight).to(temp.device) / sum
+    #     return torch.mean(torch.sum(-true_dist * temp, dim=self.dim))
+
+
 _criterion_entrypoints = {
     'cross_entropy': nn.CrossEntropyLoss,
     'focal': FocalLoss,
     'label_smoothing': LabelSmoothingLoss,
-    'f1': F1Loss
+    'f1': F1Loss,
+    'custom': CustomLoss
 }
 
 

@@ -171,9 +171,14 @@ def train(data_dir, bbox_dir, model_dir, args):
             optimizer.zero_grad()
 
             outs_mask, outs_gender, outs_age = model(inputs)
+
             preds_mask = torch.argmax(outs_mask, dim=-1)
             preds_gender = torch.argmax(outs_gender, dim=-1)
             preds_age = torch.argmax(outs_age, dim=-1)
+            true_mask = torch.argmax(labels_mask, dim=-1)
+            true_gender = torch.argmax(labels_gender, dim=-1)
+            true_age = torch.argmax(labels_age, dim=-1)
+
 
             loss_mask = criterion(outs_mask, labels_mask)
             loss_gender = criterion(outs_gender, labels_gender)
@@ -186,7 +191,7 @@ def train(data_dir, bbox_dir, model_dir, args):
             optimizer.step()
 
             loss_value += (loss_mask.item() + loss_gender.item() + loss_age.item())
-            matches += ((preds_mask == labels_mask) & (preds_gender == labels_gender) & (preds_age == labels_age)).sum().item()
+            matches += ((preds_mask == true_mask) & (preds_gender == true_gender) & (preds_age == true_age)).sum().item()
             if (idx + 1) % args.log_interval == 0:
                 train_loss = loss_value / args.log_interval
                 train_acc = matches / args.batch_size / args.log_interval
@@ -218,7 +223,7 @@ def train(data_dir, bbox_dir, model_dir, args):
                 labels_mask = labels_mask.to(device)
                 labels_gender = labels_gender.to(device)
                 labels_age = labels_age.to(device)
-                labels = labels_mask * 6 + labels_gender * 3 + labels_age
+                labels = torch.argmax(labels_mask, dim=-1) * 6 + torch.argmax(labels_gender, dim=-1) * 3 + torch.argmax(labels_age, dim=-1)
                 
 
 
@@ -226,6 +231,7 @@ def train(data_dir, bbox_dir, model_dir, args):
                 preds_mask = torch.argmax(outs_mask, dim=-1)
                 preds_gender = torch.argmax(outs_gender, dim=-1)
                 preds_age = torch.argmax(outs_age, dim=-1)
+
                 preds = preds_mask * 6 + preds_gender * 3 + preds_age
 
                 y_true[idx * len(labels):(idx+1) * len(labels)] = labels
@@ -287,14 +293,14 @@ if __name__ == '__main__':
     parser.add_argument('--optimizer', type=str, default='Adam', help='optimizer type (default: Adam)')
     parser.add_argument('--lr', type=float, default=1e-3, help='learning rate (default: 1e-3)')
     parser.add_argument('--val_ratio', type=float, default=0.2, help='ratio for validaton (default: 0.2)')
-    parser.add_argument('--criterion', type=str, default='label_smoothing', help='criterion type (default: focal)')
+    parser.add_argument('--criterion', type=str, default='custom', help='criterion type (default: focal)')
     parser.add_argument('--lr_decay_step', type=int, default=20, help='learning rate scheduler deacy step (default: 20)')
     parser.add_argument('--log_interval', type=int, default=20, help='how many batches to wait before logging training status')
     parser.add_argument('--name', default='exp', help='model save at {SM_MODEL_DIR}/{name}')
 
     # Container environment
     parser.add_argument('--data_dir', type=str, default=os.environ.get('SM_CHANNEL_TRAIN', '/opt/ml/input/data/train/images'))
-    parser.add_argument('--bbox_dir', type=str, default=os.environ.get('SM_CHANNEL_TRAIN', '/opt/ml/input/data/train/train_bbox.pickle'))
+    parser.add_argument('--bbox_dir', type=str, default=os.environ.get('SM_CHANNEL_TRAIN', '/opt/ml/input/data/train/train_bbox_mtcnn.pickle'))
     parser.add_argument('--model_dir', type=str, default=os.environ.get('SM_MODEL_DIR', '/opt/ml/baseline/model'))
 
     args = parser.parse_args()
