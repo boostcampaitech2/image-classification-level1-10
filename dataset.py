@@ -12,7 +12,7 @@ from torch.utils.data import Dataset, Subset, random_split
 from torchvision import transforms
 from torchvision.transforms import functional
 from torchvision.transforms import *
-import cvlib as cv
+from facenet_pytorch import MTCNN
 
 IMG_EXTENSIONS = [
     ".jpg", ".JPG", ".jpeg", ".JPEG", ".png",
@@ -232,8 +232,22 @@ class MaskBaseDataset(Dataset):
 
     @staticmethod
     def encode_multi_class(mask_label, gender_label, age_label):
+        if mask_label == 1:
+            mask = torch.tensor([0.05, 0.9, 0.05])
+        else:
+            mask = torch.tensor([0, 0.1, 0])
+            mask[mask_label] = 0.9
 
-        return mask_label, gender_label, age_label
+        gender = torch.tensor([0.1, 0.1])
+        gender[gender_label] = 0.9
+
+        if age_label == 1:
+            age = torch.tensor([0.05, 0.9, 0.05])
+        else:
+            age = torch.tensor([0, 0.1, 0])
+            age[age_label] = 0.9
+
+        return mask, gender, age
 
     @staticmethod
     def decode_multi_class(multi_class_label) -> Tuple[MaskLabels, GenderLabels, AgeLabels]:
@@ -335,21 +349,28 @@ class TestDataset(Dataset):
             ToTensor(),
             Normalize(mean=mean, std=std),
         ])
+        self.mtcnn = MTCNN(keep_all=True, device=torch.device("cuda" if torch.cuda.is_available() else "cpu"),
+                    selection_method='center_weighted_size', select_largest=False, thresholds=[0.5, 0.5, 0.5])
 
     def __getitem__(self, index):
         image = Image.open(self.img_paths[index])
 
         img_width = image.size[0] # 384
         img_height = image.size[1] # 512
-        bboxs, confidences = cv.detect_face(np.array(image), threshold=0.1)
+        # bboxs, confidences = cv.detect_face(np.array(image), threshold=0.1)
+        bboxs, confidences = self.mtcnn.detect(image)
+        
 
-        center_crop_x = 150
-        center_crop_y = 200
+        center_crop_x = 250
+        center_crop_y = 250
+        margin = [-40, -40, 40, 40]
         bbox = [(img_width - center_crop_x) / 2, (img_height - center_crop_y) / 2, (img_width + center_crop_x) / 2, (img_height + center_crop_y) / 2]
 
-        for bbox, confidence in zip(bboxs, confidences):
-            if is_valid_bbox(bbox, img_width, img_height):
-                break
+        if bboxs is not None:
+            for bbox, confidence in zip(bboxs, confidences):
+                if is_valid_bbox(bbox, img_width, img_height):
+                    bbox += margin
+                    break
 
         image = functional.crop(img = image, top=bbox[1], left=bbox[0], width=bbox[2] - bbox[0], height=bbox[3] - bbox[1])
         if self.transform:

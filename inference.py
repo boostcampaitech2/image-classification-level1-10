@@ -32,6 +32,7 @@ def inference(data_dir, model_dir, output_dir, args):
     """
     use_cuda = torch.cuda.is_available()
     device = torch.device("cuda" if use_cuda else "cpu")
+    torch.multiprocessing.set_start_method('spawn')
 
     num_classes = MaskBaseDataset.num_classes  # 18
     model = load_model(model_dir, num_classes, device).to(device)
@@ -55,7 +56,7 @@ def inference(data_dir, model_dir, output_dir, args):
     print("Calculating inference results..")
     preds = []
     with torch.no_grad():
-        for idx, images in enumerate(tqdm(loader)):
+        for images in tqdm(loader):
             images = images.to(device)
             pred_mask, pred_gender, pred_age = model(images)
 
