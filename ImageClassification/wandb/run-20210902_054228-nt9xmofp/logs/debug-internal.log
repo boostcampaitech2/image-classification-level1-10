@@ -1,0 +1,126 @@
+2021-09-02 05:42:28,998 INFO    MainThread:2280 [internal.py:wandb_internal():86] W&B internal server running at pid: 2280, started at: 2021-09-02 05:42:28.997867
+2021-09-02 05:42:29,001 DEBUG   SenderThread:2280 [sender.py:send():182] send: header
+2021-09-02 05:42:29,001 INFO    WriterThread:2280 [datastore.py:open_for_write():77] open: /opt/ml/code/ImageClassification/wandb/run-20210902_054228-nt9xmofp/run-nt9xmofp.wandb
+2021-09-02 05:42:29,001 DEBUG   HandlerThread:2280 [handler.py:handle_request():126] handle_request: check_version
+2021-09-02 05:42:29,002 DEBUG   SenderThread:2280 [sender.py:send_request():196] send_request: check_version
+2021-09-02 05:42:29,180 DEBUG   SenderThread:2280 [sender.py:send():182] send: run
+2021-09-02 05:42:29,395 INFO    SenderThread:2280 [dir_watcher.py:__init__():169] watching files in: /opt/ml/code/ImageClassification/wandb/run-20210902_054228-nt9xmofp/files
+2021-09-02 05:42:29,395 INFO    SenderThread:2280 [sender.py:_start_run_threads():740] run started: nt9xmofp with start time 1630561348
+2021-09-02 05:42:29,395 DEBUG   SenderThread:2280 [sender.py:send():182] send: summary
+2021-09-02 05:42:29,395 INFO    SenderThread:2280 [sender.py:_save_file():873] saving file wandb-summary.json with policy end
+2021-09-02 05:42:29,396 DEBUG   HandlerThread:2280 [handler.py:handle_request():126] handle_request: run_start
+2021-09-02 05:42:29,399 DEBUG   HandlerThread:2280 [meta.py:__init__():40] meta init
+2021-09-02 05:42:29,399 DEBUG   HandlerThread:2280 [meta.py:__init__():54] meta init done
+2021-09-02 05:42:29,399 DEBUG   HandlerThread:2280 [meta.py:probe():211] probe
+2021-09-02 05:42:29,405 DEBUG   HandlerThread:2280 [meta.py:_setup_git():201] setup git
+2021-09-02 05:42:29,421 DEBUG   HandlerThread:2280 [meta.py:_setup_git():208] setup git done
+2021-09-02 05:42:29,421 DEBUG   HandlerThread:2280 [meta.py:_save_pip():58] save pip
+2021-09-02 05:42:29,421 DEBUG   HandlerThread:2280 [meta.py:_save_pip():72] save pip done
+2021-09-02 05:42:29,421 DEBUG   HandlerThread:2280 [meta.py:_save_conda():79] save conda
+2021-09-02 05:42:30,397 INFO    Thread-8  :2280 [dir_watcher.py:_on_file_created():217] file/dir created: /opt/ml/code/ImageClassification/wandb/run-20210902_054228-nt9xmofp/files/conda-environment.yaml
+2021-09-02 05:42:30,397 INFO    Thread-8  :2280 [dir_watcher.py:_on_file_created():217] file/dir created: /opt/ml/code/ImageClassification/wandb/run-20210902_054228-nt9xmofp/files/wandb-summary.json
+2021-09-02 05:42:30,398 INFO    Thread-8  :2280 [dir_watcher.py:_on_file_created():217] file/dir created: /opt/ml/code/ImageClassification/wandb/run-20210902_054228-nt9xmofp/files/requirements.txt
+2021-09-02 05:42:32,147 DEBUG   HandlerThread:2280 [meta.py:_save_conda():87] save conda done
+2021-09-02 05:42:32,147 DEBUG   HandlerThread:2280 [meta.py:probe():249] probe done
+2021-09-02 05:42:32,279 DEBUG   SenderThread:2280 [sender.py:send():182] send: files
+2021-09-02 05:42:32,279 INFO    SenderThread:2280 [sender.py:_save_file():873] saving file wandb-metadata.json with policy now
+2021-09-02 05:42:32,284 DEBUG   HandlerThread:2280 [handler.py:handle_request():126] handle_request: stop_status
+2021-09-02 05:42:32,284 DEBUG   SenderThread:2280 [sender.py:send_request():196] send_request: stop_status
+2021-09-02 05:42:32,398 INFO    Thread-8  :2280 [dir_watcher.py:_on_file_created():217] file/dir created: /opt/ml/code/ImageClassification/wandb/run-20210902_054228-nt9xmofp/files/output.log
+2021-09-02 05:42:32,399 INFO    Thread-8  :2280 [dir_watcher.py:_on_file_created():217] file/dir created: /opt/ml/code/ImageClassification/wandb/run-20210902_054228-nt9xmofp/files/wandb-metadata.json
+2021-09-02 05:42:32,889 INFO    Thread-11 :2280 [upload_job.py:push():137] Uploaded file /tmp/tmpf7fulpw2wandb/2waypw07-wandb-metadata.json
+2021-09-02 05:42:42,402 INFO    Thread-8  :2280 [dir_watcher.py:_on_file_modified():230] file/dir modified: /opt/ml/code/ImageClassification/wandb/run-20210902_054228-nt9xmofp/files/output.log
+2021-09-02 05:42:47,468 DEBUG   HandlerThread:2280 [handler.py:handle_request():126] handle_request: stop_status
+2021-09-02 05:42:47,468 DEBUG   SenderThread:2280 [sender.py:send_request():196] send_request: stop_status
+2021-09-02 05:42:50,404 INFO    Thread-8  :2280 [dir_watcher.py:_on_file_modified():230] file/dir modified: /opt/ml/code/ImageClassification/wandb/run-20210902_054228-nt9xmofp/files/output.log
+2021-09-02 05:42:57,519 DEBUG   SenderThread:2280 [sender.py:send():182] send: stats
+2021-09-02 05:42:58,407 INFO    Thread-8  :2280 [dir_watcher.py:_on_file_modified():230] file/dir modified: /opt/ml/code/ImageClassification/wandb/run-20210902_054228-nt9xmofp/files/output.log
+2021-09-02 05:43:02,650 DEBUG   HandlerThread:2280 [handler.py:handle_request():126] handle_request: stop_status
+2021-09-02 05:43:02,650 DEBUG   SenderThread:2280 [sender.py:send_request():196] send_request: stop_status
+2021-09-02 05:43:06,411 INFO    Thread-8  :2280 [dir_watcher.py:_on_file_modified():230] file/dir modified: /opt/ml/code/ImageClassification/wandb/run-20210902_054228-nt9xmofp/files/output.log
+2021-09-02 05:43:14,414 INFO    Thread-8  :2280 [dir_watcher.py:_on_file_modified():230] file/dir modified: /opt/ml/code/ImageClassification/wandb/run-20210902_054228-nt9xmofp/files/output.log
+2021-09-02 05:43:17,834 DEBUG   HandlerThread:2280 [handler.py:handle_request():126] handle_request: stop_status
+2021-09-02 05:43:17,834 DEBUG   SenderThread:2280 [sender.py:send_request():196] send_request: stop_status
+2021-09-02 05:43:22,417 INFO    Thread-8  :2280 [dir_watcher.py:_on_file_modified():230] file/dir modified: /opt/ml/code/ImageClassification/wandb/run-20210902_054228-nt9xmofp/files/output.log
+2021-09-02 05:43:27,625 DEBUG   SenderThread:2280 [sender.py:send():182] send: stats
+2021-09-02 05:43:30,420 INFO    Thread-8  :2280 [dir_watcher.py:_on_file_modified():230] file/dir modified: /opt/ml/code/ImageClassification/wandb/run-20210902_054228-nt9xmofp/files/output.log
+2021-09-02 05:43:33,073 DEBUG   HandlerThread:2280 [handler.py:handle_request():126] handle_request: stop_status
+2021-09-02 05:43:33,074 DEBUG   SenderThread:2280 [sender.py:send_request():196] send_request: stop_status
+2021-09-02 05:43:38,423 INFO    Thread-8  :2280 [dir_watcher.py:_on_file_modified():230] file/dir modified: /opt/ml/code/ImageClassification/wandb/run-20210902_054228-nt9xmofp/files/output.log
+2021-09-02 05:43:44,425 INFO    Thread-8  :2280 [dir_watcher.py:_on_file_modified():230] file/dir modified: /opt/ml/code/ImageClassification/wandb/run-20210902_054228-nt9xmofp/files/output.log
+2021-09-02 05:43:48,258 DEBUG   HandlerThread:2280 [handler.py:handle_request():126] handle_request: stop_status
+2021-09-02 05:43:48,259 DEBUG   SenderThread:2280 [sender.py:send_request():196] send_request: stop_status
+2021-09-02 05:43:52,428 INFO    Thread-8  :2280 [dir_watcher.py:_on_file_modified():230] file/dir modified: /opt/ml/code/ImageClassification/wandb/run-20210902_054228-nt9xmofp/files/output.log
+2021-09-02 05:43:57,731 DEBUG   SenderThread:2280 [sender.py:send():182] send: stats
+2021-09-02 05:44:00,431 INFO    Thread-8  :2280 [dir_watcher.py:_on_file_modified():230] file/dir modified: /opt/ml/code/ImageClassification/wandb/run-20210902_054228-nt9xmofp/files/output.log
+2021-09-02 05:44:03,438 DEBUG   HandlerThread:2280 [handler.py:handle_request():126] handle_request: stop_status
+2021-09-02 05:44:03,438 DEBUG   SenderThread:2280 [sender.py:send_request():196] send_request: stop_status
+2021-09-02 05:44:06,433 INFO    Thread-8  :2280 [dir_watcher.py:_on_file_modified():230] file/dir modified: /opt/ml/code/ImageClassification/wandb/run-20210902_054228-nt9xmofp/files/output.log
+2021-09-02 05:44:08,433 INFO    Thread-8  :2280 [dir_watcher.py:_on_file_modified():230] file/dir modified: /opt/ml/code/ImageClassification/wandb/run-20210902_054228-nt9xmofp/files/output.log
+2021-09-02 05:44:10,434 INFO    Thread-8  :2280 [dir_watcher.py:_on_file_modified():230] file/dir modified: /opt/ml/code/ImageClassification/wandb/run-20210902_054228-nt9xmofp/files/output.log
+2021-09-02 05:44:12,435 INFO    Thread-8  :2280 [dir_watcher.py:_on_file_modified():230] file/dir modified: /opt/ml/code/ImageClassification/wandb/run-20210902_054228-nt9xmofp/files/output.log
+2021-09-02 05:44:14,435 INFO    Thread-8  :2280 [dir_watcher.py:_on_file_modified():230] file/dir modified: /opt/ml/code/ImageClassification/wandb/run-20210902_054228-nt9xmofp/files/output.log
+2021-09-02 05:44:16,436 INFO    Thread-8  :2280 [dir_watcher.py:_on_file_modified():230] file/dir modified: /opt/ml/code/ImageClassification/wandb/run-20210902_054228-nt9xmofp/files/output.log
+2021-09-02 05:44:18,437 INFO    Thread-8  :2280 [dir_watcher.py:_on_file_modified():230] file/dir modified: /opt/ml/code/ImageClassification/wandb/run-20210902_054228-nt9xmofp/files/output.log
+2021-09-02 05:44:18,621 DEBUG   HandlerThread:2280 [handler.py:handle_request():126] handle_request: stop_status
+2021-09-02 05:44:18,622 DEBUG   SenderThread:2280 [sender.py:send_request():196] send_request: stop_status
+2021-09-02 05:44:21,438 INFO    Thread-8  :2280 [dir_watcher.py:_on_file_modified():230] file/dir modified: /opt/ml/code/ImageClassification/wandb/run-20210902_054228-nt9xmofp/files/output.log
+2021-09-02 05:44:23,438 INFO    Thread-8  :2280 [dir_watcher.py:_on_file_modified():230] file/dir modified: /opt/ml/code/ImageClassification/wandb/run-20210902_054228-nt9xmofp/files/output.log
+2021-09-02 05:44:25,439 INFO    Thread-8  :2280 [dir_watcher.py:_on_file_modified():230] file/dir modified: /opt/ml/code/ImageClassification/wandb/run-20210902_054228-nt9xmofp/files/output.log
+2021-09-02 05:44:26,988 DEBUG   SenderThread:2280 [sender.py:send():182] send: history
+2021-09-02 05:44:26,988 DEBUG   SenderThread:2280 [sender.py:send():182] send: summary
+2021-09-02 05:44:26,989 INFO    SenderThread:2280 [sender.py:_save_file():873] saving file wandb-summary.json with policy end
+2021-09-02 05:44:27,440 INFO    Thread-8  :2280 [dir_watcher.py:_on_file_modified():230] file/dir modified: /opt/ml/code/ImageClassification/wandb/run-20210902_054228-nt9xmofp/files/wandb-summary.json
+2021-09-02 05:44:27,440 INFO    Thread-8  :2280 [dir_watcher.py:_on_file_modified():230] file/dir modified: /opt/ml/code/ImageClassification/wandb/run-20210902_054228-nt9xmofp/files/output.log
+2021-09-02 05:44:27,838 DEBUG   SenderThread:2280 [sender.py:send():182] send: stats
+2021-09-02 05:44:29,441 INFO    Thread-8  :2280 [dir_watcher.py:_on_file_modified():230] file/dir modified: /opt/ml/code/ImageClassification/wandb/run-20210902_054228-nt9xmofp/files/output.log
+2021-09-02 05:44:33,807 DEBUG   HandlerThread:2280 [handler.py:handle_request():126] handle_request: stop_status
+2021-09-02 05:44:33,808 DEBUG   SenderThread:2280 [sender.py:send_request():196] send_request: stop_status
+2021-09-02 05:44:39,444 INFO    Thread-8  :2280 [dir_watcher.py:_on_file_modified():230] file/dir modified: /opt/ml/code/ImageClassification/wandb/run-20210902_054228-nt9xmofp/files/output.log
+2021-09-02 05:44:45,447 INFO    Thread-8  :2280 [dir_watcher.py:_on_file_modified():230] file/dir modified: /opt/ml/code/ImageClassification/wandb/run-20210902_054228-nt9xmofp/files/output.log
+2021-09-02 05:44:48,992 DEBUG   HandlerThread:2280 [handler.py:handle_request():126] handle_request: stop_status
+2021-09-02 05:44:48,993 DEBUG   SenderThread:2280 [sender.py:send_request():196] send_request: stop_status
+2021-09-02 05:44:53,450 INFO    Thread-8  :2280 [dir_watcher.py:_on_file_modified():230] file/dir modified: /opt/ml/code/ImageClassification/wandb/run-20210902_054228-nt9xmofp/files/output.log
+2021-09-02 05:44:57,938 DEBUG   SenderThread:2280 [sender.py:send():182] send: stats
+2021-09-02 05:45:01,453 INFO    Thread-8  :2280 [dir_watcher.py:_on_file_modified():230] file/dir modified: /opt/ml/code/ImageClassification/wandb/run-20210902_054228-nt9xmofp/files/output.log
+2021-09-02 05:45:04,179 DEBUG   HandlerThread:2280 [handler.py:handle_request():126] handle_request: stop_status
+2021-09-02 05:45:04,180 DEBUG   SenderThread:2280 [sender.py:send_request():196] send_request: stop_status
+2021-09-02 05:45:09,456 INFO    Thread-8  :2280 [dir_watcher.py:_on_file_modified():230] file/dir modified: /opt/ml/code/ImageClassification/wandb/run-20210902_054228-nt9xmofp/files/output.log
+2021-09-02 05:45:17,459 INFO    Thread-8  :2280 [dir_watcher.py:_on_file_modified():230] file/dir modified: /opt/ml/code/ImageClassification/wandb/run-20210902_054228-nt9xmofp/files/output.log
+2021-09-02 05:45:19,365 DEBUG   HandlerThread:2280 [handler.py:handle_request():126] handle_request: stop_status
+2021-09-02 05:45:19,365 DEBUG   SenderThread:2280 [sender.py:send_request():196] send_request: stop_status
+2021-09-02 05:45:25,462 INFO    Thread-8  :2280 [dir_watcher.py:_on_file_modified():230] file/dir modified: /opt/ml/code/ImageClassification/wandb/run-20210902_054228-nt9xmofp/files/output.log
+2021-09-02 05:45:28,053 DEBUG   SenderThread:2280 [sender.py:send():182] send: stats
+2021-09-02 05:45:33,469 INFO    Thread-8  :2280 [dir_watcher.py:_on_file_modified():230] file/dir modified: /opt/ml/code/ImageClassification/wandb/run-20210902_054228-nt9xmofp/files/output.log
+2021-09-02 05:45:34,563 DEBUG   HandlerThread:2280 [handler.py:handle_request():126] handle_request: stop_status
+2021-09-02 05:45:34,563 DEBUG   SenderThread:2280 [sender.py:send_request():196] send_request: stop_status
+2021-09-02 05:45:39,471 INFO    Thread-8  :2280 [dir_watcher.py:_on_file_modified():230] file/dir modified: /opt/ml/code/ImageClassification/wandb/run-20210902_054228-nt9xmofp/files/output.log
+2021-09-02 05:45:47,474 INFO    Thread-8  :2280 [dir_watcher.py:_on_file_modified():230] file/dir modified: /opt/ml/code/ImageClassification/wandb/run-20210902_054228-nt9xmofp/files/output.log
+2021-09-02 05:45:49,747 DEBUG   HandlerThread:2280 [handler.py:handle_request():126] handle_request: stop_status
+2021-09-02 05:45:49,748 DEBUG   SenderThread:2280 [sender.py:send_request():196] send_request: stop_status
+2021-09-02 05:45:55,477 INFO    Thread-8  :2280 [dir_watcher.py:_on_file_modified():230] file/dir modified: /opt/ml/code/ImageClassification/wandb/run-20210902_054228-nt9xmofp/files/output.log
+2021-09-02 05:45:58,157 DEBUG   SenderThread:2280 [sender.py:send():182] send: stats
+2021-09-02 05:46:01,480 INFO    Thread-8  :2280 [dir_watcher.py:_on_file_modified():230] file/dir modified: /opt/ml/code/ImageClassification/wandb/run-20210902_054228-nt9xmofp/files/output.log
+2021-09-02 05:46:03,480 INFO    Thread-8  :2280 [dir_watcher.py:_on_file_modified():230] file/dir modified: /opt/ml/code/ImageClassification/wandb/run-20210902_054228-nt9xmofp/files/output.log
+2021-09-02 05:46:04,961 DEBUG   HandlerThread:2280 [handler.py:handle_request():126] handle_request: stop_status
+2021-09-02 05:46:04,962 DEBUG   SenderThread:2280 [sender.py:send_request():196] send_request: stop_status
+2021-09-02 05:46:05,481 INFO    Thread-8  :2280 [dir_watcher.py:_on_file_modified():230] file/dir modified: /opt/ml/code/ImageClassification/wandb/run-20210902_054228-nt9xmofp/files/output.log
+2021-09-02 05:46:07,482 INFO    Thread-8  :2280 [dir_watcher.py:_on_file_modified():230] file/dir modified: /opt/ml/code/ImageClassification/wandb/run-20210902_054228-nt9xmofp/files/output.log
+2021-09-02 05:46:09,483 INFO    Thread-8  :2280 [dir_watcher.py:_on_file_modified():230] file/dir modified: /opt/ml/code/ImageClassification/wandb/run-20210902_054228-nt9xmofp/files/output.log
+2021-09-02 05:46:11,484 INFO    Thread-8  :2280 [dir_watcher.py:_on_file_modified():230] file/dir modified: /opt/ml/code/ImageClassification/wandb/run-20210902_054228-nt9xmofp/files/output.log
+2021-09-02 05:46:13,484 INFO    Thread-8  :2280 [dir_watcher.py:_on_file_modified():230] file/dir modified: /opt/ml/code/ImageClassification/wandb/run-20210902_054228-nt9xmofp/files/output.log
+2021-09-02 05:46:15,485 INFO    Thread-8  :2280 [dir_watcher.py:_on_file_modified():230] file/dir modified: /opt/ml/code/ImageClassification/wandb/run-20210902_054228-nt9xmofp/files/output.log
+2021-09-02 05:46:17,486 INFO    Thread-8  :2280 [dir_watcher.py:_on_file_modified():230] file/dir modified: /opt/ml/code/ImageClassification/wandb/run-20210902_054228-nt9xmofp/files/output.log
+2021-09-02 05:46:19,487 INFO    Thread-8  :2280 [dir_watcher.py:_on_file_modified():230] file/dir modified: /opt/ml/code/ImageClassification/wandb/run-20210902_054228-nt9xmofp/files/output.log
+2021-09-02 05:46:20,147 DEBUG   HandlerThread:2280 [handler.py:handle_request():126] handle_request: stop_status
+2021-09-02 05:46:20,147 DEBUG   SenderThread:2280 [sender.py:send_request():196] send_request: stop_status
+2021-09-02 05:46:21,261 DEBUG   SenderThread:2280 [sender.py:send():182] send: history
+2021-09-02 05:46:21,261 DEBUG   SenderThread:2280 [sender.py:send():182] send: summary
+2021-09-02 05:46:21,262 INFO    SenderThread:2280 [sender.py:_save_file():873] saving file wandb-summary.json with policy end
+2021-09-02 05:46:21,488 INFO    Thread-8  :2280 [dir_watcher.py:_on_file_modified():230] file/dir modified: /opt/ml/code/ImageClassification/wandb/run-20210902_054228-nt9xmofp/files/wandb-summary.json
+2021-09-02 05:46:21,488 INFO    Thread-8  :2280 [dir_watcher.py:_on_file_modified():230] file/dir modified: /opt/ml/code/ImageClassification/wandb/run-20210902_054228-nt9xmofp/files/output.log
+2021-09-02 05:46:23,488 INFO    Thread-8  :2280 [dir_watcher.py:_on_file_modified():230] file/dir modified: /opt/ml/code/ImageClassification/wandb/run-20210902_054228-nt9xmofp/files/output.log
+2021-09-02 05:46:28,269 DEBUG   SenderThread:2280 [sender.py:send():182] send: stats
+2021-09-02 05:46:33,492 INFO    Thread-8  :2280 [dir_watcher.py:_on_file_modified():230] file/dir modified: /opt/ml/code/ImageClassification/wandb/run-20210902_054228-nt9xmofp/files/output.log
+2021-09-02 05:46:35,334 DEBUG   HandlerThread:2280 [handler.py:handle_request():126] handle_request: stop_status
+2021-09-02 05:46:35,334 DEBUG   SenderThread:2280 [sender.py:send_request():196] send_request: stop_status

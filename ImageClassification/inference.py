@@ -5,7 +5,7 @@ from importlib import import_module
 import pandas as pd
 import torch
 from torch.utils.data import DataLoader
-
+from tqdm import tqdm
 from dataset import TestDataset, MaskBaseDataset
 
 
@@ -18,7 +18,9 @@ def load_model(saved_model, num_classes, device):
     # tarpath = os.path.join(saved_model, 'best.tar.gz')
     # tar = tarfile.open(tarpath, 'r:gz')
     # tar.extractall(path=saved_model)
-
+    print("="*50)
+    print(f"Model will be loaded from {saved_model}")
+    print("="*50)
     model_path = os.path.join(saved_model, 'best.pth')
     model.load_state_dict(torch.load(model_path, map_location=device))
 
@@ -31,7 +33,8 @@ def inference(data_dir, model_dir, output_dir, args):
     """
     use_cuda = torch.cuda.is_available()
     device = torch.device("cuda" if use_cuda else "cpu")
-
+    if use_cuda:
+        torch.cuda.empty_cache()
     num_classes = MaskBaseDataset.num_classes  # 18
     model = load_model(model_dir, num_classes, device).to(device)
     model.eval()
@@ -54,13 +57,19 @@ def inference(data_dir, model_dir, output_dir, args):
     print("Calculating inference results..")
     preds = []
     with torch.no_grad():
-        for idx, images in enumerate(loader):
+        for idx, images in enumerate(tqdm(loader)):
             images = images.to(device)
-            pred = model(images)
-            pred = pred.argmax(dim=-1)
+            # pred = model(images)
+            mask_out, gender_out, age_out = model(images)
+            mask_preds = torch.argmax(mask_out, dim=-1)
+            gender_preds = torch.argmax(gender_out, dim=-1)
+            age_preds = torch.argmax(age_out, dim=-1)
+            pred = (mask_preds * 6 + gender_preds * 3 + age_preds).to(device)
+            # pred = pred.argmax(dim=-1)
             preds.extend(pred.cpu().numpy())
 
     info['ans'] = preds
+    print(f"output is in {output_dir}")
     info.to_csv(os.path.join(output_dir, f'output.csv'), index=False)
     print(f'Inference Done!')
 
@@ -69,14 +78,20 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
 
     # Data and model checkpoints directories
-    parser.add_argument('--batch_size', type=int, default=1000, help='input batch size for validing (default: 1000)')
-    parser.add_argument('--resize', type=tuple, default=(96, 128), help='resize size for image when you trained (default: (96, 128))')
-    parser.add_argument('--model', type=str, default='BaseModel', help='model type (default: BaseModel)')
+    parser.add_argument('--batch_size', type=int, default=32,
+                        help='input batch size for validing (default: 32)')
+    parser.add_argument('--resize', type=tuple, default=(512, 384),
+                        help='resize size for image when you trained (default: (512, 384))')
+    parser.add_argument('--model', type=str, default='MyModel',
+                        help='model type (default: MyModel)')
 
     # Container environment
-    parser.add_argument('--data_dir', type=str, default=os.environ.get('SM_CHANNEL_EVAL', '/opt/ml/input/data/eval'))
-    parser.add_argument('--model_dir', type=str, default=os.environ.get('SM_CHANNEL_MODEL', './model'))
-    parser.add_argument('--output_dir', type=str, default=os.environ.get('SM_OUTPUT_DATA_DIR', './output'))
+    parser.add_argument('--data_dir', type=str,
+                        default=os.environ.get('SM_CHANNEL_EVAL', '/opt/ml/input/data/eval'))
+    parser.add_argument('--model_dir', type=str,
+                        default=os.environ.get('SM_CHANNEL_MODEL', './model/exp'))
+    parser.add_argument('--output_dir', type=str,
+                        default=os.environ.get('SM_OUTPUT_DATA_DIR', './output'))
 
     args = parser.parse_args()
 

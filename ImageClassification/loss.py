@@ -23,6 +23,43 @@ class FocalLoss(nn.Module):
         )
 
 
+class CustomFocalLoss(nn.Module):
+    """
+    CustomFocalLoss with Label smoothing
+    """
+
+    def __init__(self, weight=None,
+                 gamma=2., reduction='mean'):
+        nn.Module.__init__(self)
+        self.weight = weight
+        self.gamma = gamma
+        self.reduction = reduction
+        self.smoothing = 0.01
+
+    def forward(self, input_tensor, target_tensor, kind):
+        if kind == "mask" or kind == "age":
+            cls = 3
+        elif kind == "gender":
+            cls = 2
+        else:
+            raise ValueError("kind does not exist")
+        log_prob = F.log_softmax(input_tensor, dim=-1)
+        prob = torch.exp(log_prob)
+        with torch.no_grad():
+            true_dist = torch.zeros_like(input_tensor)
+            true_dist.fill_(self.smoothing)
+            true_dist.scatter_(
+                1, target_tensor.data.unsqueeze(1), 1-(self.smoothing*(cls-1)))
+        ratio = ((1 - prob) ** self.gamma) * log_prob
+        return torch.mean(torch.sum(-ratio*true_dist, dim=-1))
+        # return F.nll_loss(
+        #     ((1 - prob) ** self.gamma) * log_prob,
+        #     target_tensor,
+        #     weight = self.weight,
+        #     reduction = self.reduction
+        # )
+
+
 class LabelSmoothingLoss(nn.Module):
     def __init__(self, classes=3, smoothing=0.0, dim=-1):
         super(LabelSmoothingLoss, self).__init__()
@@ -46,6 +83,7 @@ class F1Loss(nn.Module):
         super().__init__()
         self.classes = classes
         self.epsilon = epsilon
+
     def forward(self, y_pred, y_true):
         assert y_pred.ndim == 2
         assert y_true.ndim == 1
@@ -69,7 +107,10 @@ _criterion_entrypoints = {
     'cross_entropy': nn.CrossEntropyLoss,
     'focal': FocalLoss,
     'label_smoothing': LabelSmoothingLoss,
-    'f1': F1Loss
+    'f1': F1Loss,
+    "custom_focal": CustomFocalLoss
+
+
 }
 
 

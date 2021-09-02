@@ -1,0 +1,589 @@
+Epoch[0/10](20/919) ||
+training mask loss 0.4379 || training mask accuracy 84.45% || lr 0.001
+training gender loss 0.1537 || training gender accuracy 72.50% || lr 0.001
+training age loss 0.3664 || training age accuracy 62.42% || lr 0.001
+Epoch[0/10](40/919) ||
+training mask loss 0.09671 || training mask accuracy 96.64% || lr 0.001
+training gender loss 0.1011 || training gender accuracy 82.03% || lr 0.001
+training age loss 0.2598 || training age accuracy 75.70% || lr 0.001
+Epoch[0/10](60/919) ||
+training mask loss 0.08198 || training mask accuracy 96.64% || lr 0.001
+training gender loss 0.08244 || training gender accuracy 87.11% || lr 0.001
+training age loss 0.2226 || training age accuracy 77.42% || lr 0.001
+Epoch[0/10](80/919) ||
+training mask loss 0.08411 || training mask accuracy 97.58% || lr 0.001
+training gender loss 0.06247 || training gender accuracy 92.58% || lr 0.001
+training age loss 0.1858 || training age accuracy 84.92% || lr 0.001
+Epoch[0/10](100/919) ||
+training mask loss 0.07526 || training mask accuracy 97.58% || lr 0.001
+training gender loss 0.05051 || training gender accuracy 95.86% || lr 0.001
+training age loss 0.1866 || training age accuracy 85.94% || lr 0.001
+Epoch[0/10](120/919) ||
+training mask loss 0.07005 || training mask accuracy 98.44% || lr 0.001
+training gender loss 0.0561 || training gender accuracy 94.06% || lr 0.001
+training age loss 0.1607 || training age accuracy 88.83% || lr 0.001
+Epoch[0/10](140/919) ||
+training mask loss 0.06512 || training mask accuracy 98.83% || lr 0.001
+training gender loss 0.04965 || training gender accuracy 95.70% || lr 0.001
+training age loss 0.1624 || training age accuracy 87.81% || lr 0.001
+Epoch[0/10](160/919) ||
+training mask loss 0.06606 || training mask accuracy 98.52% || lr 0.001
+training gender loss 0.05223 || training gender accuracy 95.55% || lr 0.001
+training age loss 0.1998 || training age accuracy 84.38% || lr 0.001
+Epoch[0/10](180/919) ||
+training mask loss 0.0713 || training mask accuracy 98.28% || lr 0.001
+training gender loss 0.05336 || training gender accuracy 95.00% || lr 0.001
+training age loss 0.1815 || training age accuracy 86.02% || lr 0.001
+Epoch[0/10](200/919) ||
+training mask loss 0.07578 || training mask accuracy 97.11% || lr 0.001
+training gender loss 0.05722 || training gender accuracy 93.67% || lr 0.001
+training age loss 0.1861 || training age accuracy 86.95% || lr 0.001
+Epoch[0/10](220/919) ||
+training mask loss 0.07448 || training mask accuracy 97.66% || lr 0.001
+training gender loss 0.05569 || training gender accuracy 94.77% || lr 0.001
+training age loss 0.1701 || training age accuracy 86.09% || lr 0.001
+Epoch[0/10](240/919) ||
+training mask loss 0.07319 || training mask accuracy 98.20% || lr 0.001
+training gender loss 0.04631 || training gender accuracy 95.31% || lr 0.001
+training age loss 0.164 || training age accuracy 87.97% || lr 0.001
+Epoch[0/10](260/919) ||
+training mask loss 0.09299 || training mask accuracy 96.64% || lr 0.001
+training gender loss 0.05087 || training gender accuracy 94.92% || lr 0.001
+training age loss 0.216 || training age accuracy 84.53% || lr 0.001
+Epoch[0/10](280/919) ||
+training mask loss 0.07074 || training mask accuracy 98.75% || lr 0.001
+training gender loss 0.04802 || training gender accuracy 94.53% || lr 0.001
+training age loss 0.1799 || training age accuracy 86.09% || lr 0.001
+Epoch[0/10](300/919) ||
+training mask loss 0.07512 || training mask accuracy 97.73% || lr 0.001
+training gender loss 0.05538 || training gender accuracy 95.16% || lr 0.001
+training age loss 0.1826 || training age accuracy 87.19% || lr 0.001
+Epoch[0/10](320/919) ||
+training mask loss 0.08243 || training mask accuracy 96.64% || lr 0.001
+training gender loss 0.06092 || training gender accuracy 92.81% || lr 0.001
+training age loss 0.1673 || training age accuracy 86.95% || lr 0.001
+Epoch[0/10](340/919) ||
+training mask loss 0.06978 || training mask accuracy 98.05% || lr 0.001
+training gender loss 0.05246 || training gender accuracy 94.84% || lr 0.001
+training age loss 0.1752 || training age accuracy 87.19% || lr 0.001
+Epoch[0/10](360/919) ||
+training mask loss 0.06459 || training mask accuracy 98.67% || lr 0.001
+training gender loss 0.04562 || training gender accuracy 95.86% || lr 0.001
+training age loss 0.1646 || training age accuracy 87.11% || lr 0.001
+Epoch[0/10](380/919) ||
+training mask loss 0.06666 || training mask accuracy 98.28% || lr 0.001
+training gender loss 0.05937 || training gender accuracy 94.77% || lr 0.001
+training age loss 0.1701 || training age accuracy 87.27% || lr 0.001
+Epoch[0/10](400/919) ||
+training mask loss 0.07594 || training mask accuracy 97.19% || lr 0.001
+training gender loss 0.05447 || training gender accuracy 94.22% || lr 0.001
+training age loss 0.1663 || training age accuracy 87.03% || lr 0.001
+Epoch[0/10](420/919) ||
+training mask loss 0.08929 || training mask accuracy 96.33% || lr 0.001
+training gender loss 0.05614 || training gender accuracy 94.69% || lr 0.001
+training age loss 0.1778 || training age accuracy 84.84% || lr 0.001
+Epoch[0/10](440/919) ||
+training mask loss 0.07826 || training mask accuracy 97.58% || lr 0.001
+training gender loss 0.05945 || training gender accuracy 92.97% || lr 0.001
+training age loss 0.1772 || training age accuracy 85.00% || lr 0.001
+Epoch[0/10](460/919) ||
+training mask loss 0.06885 || training mask accuracy 98.59% || lr 0.001
+training gender loss 0.05253 || training gender accuracy 94.53% || lr 0.001
+training age loss 0.1655 || training age accuracy 87.34% || lr 0.001
+Epoch[0/10](480/919) ||
+training mask loss 0.07633 || training mask accuracy 97.19% || lr 0.001
+training gender loss 0.06472 || training gender accuracy 91.56% || lr 0.001
+training age loss 0.1806 || training age accuracy 84.69% || lr 0.001
+Epoch[0/10](500/919) ||
+training mask loss 0.07023 || training mask accuracy 98.36% || lr 0.001
+training gender loss 0.05208 || training gender accuracy 94.77% || lr 0.001
+training age loss 0.166 || training age accuracy 86.56% || lr 0.001
+Epoch[0/10](520/919) ||
+training mask loss 0.06237 || training mask accuracy 98.52% || lr 0.001
+training gender loss 0.054 || training gender accuracy 94.61% || lr 0.001
+training age loss 0.1594 || training age accuracy 87.81% || lr 0.001
+Epoch[0/10](540/919) ||
+training mask loss 0.06261 || training mask accuracy 98.75% || lr 0.001
+training gender loss 0.05974 || training gender accuracy 92.81% || lr 0.001
+training age loss 0.1755 || training age accuracy 85.23% || lr 0.001
+Epoch[0/10](560/919) ||
+training mask loss 0.06973 || training mask accuracy 98.44% || lr 0.001
+training gender loss 0.05254 || training gender accuracy 95.16% || lr 0.001
+training age loss 0.1511 || training age accuracy 89.92% || lr 0.001
+Epoch[0/10](580/919) ||
+training mask loss 0.06393 || training mask accuracy 98.98% || lr 0.001
+training gender loss 0.04758 || training gender accuracy 95.47% || lr 0.001
+training age loss 0.1443 || training age accuracy 89.45% || lr 0.001
+Epoch[0/10](600/919) ||
+training mask loss 0.06072 || training mask accuracy 98.98% || lr 0.001
+training gender loss 0.0463 || training gender accuracy 95.31% || lr 0.001
+training age loss 0.148 || training age accuracy 89.38% || lr 0.001
+Epoch[0/10](620/919) ||
+training mask loss 0.05933 || training mask accuracy 99.06% || lr 0.001
+training gender loss 0.04809 || training gender accuracy 95.00% || lr 0.001
+training age loss 0.1441 || training age accuracy 88.83% || lr 0.001
+Epoch[0/10](640/919) ||
+training mask loss 0.0667 || training mask accuracy 98.28% || lr 0.001
+training gender loss 0.05134 || training gender accuracy 95.23% || lr 0.001
+training age loss 0.1725 || training age accuracy 85.62% || lr 0.001
+Epoch[0/10](660/919) ||
+training mask loss 0.06137 || training mask accuracy 98.83% || lr 0.001
+training gender loss 0.0544 || training gender accuracy 94.84% || lr 0.001
+training age loss 0.1395 || training age accuracy 88.36% || lr 0.001
+Epoch[0/10](680/919) ||
+training mask loss 0.07364 || training mask accuracy 98.59% || lr 0.001
+training gender loss 0.0561 || training gender accuracy 94.84% || lr 0.001
+training age loss 0.1419 || training age accuracy 88.52% || lr 0.001
+Epoch[0/10](700/919) ||
+training mask loss 0.07964 || training mask accuracy 97.58% || lr 0.001
+training gender loss 0.04738 || training gender accuracy 96.02% || lr 0.001
+training age loss 0.1549 || training age accuracy 87.34% || lr 0.001
+Epoch[0/10](720/919) ||
+training mask loss 0.07229 || training mask accuracy 98.12% || lr 0.001
+training gender loss 0.05553 || training gender accuracy 94.06% || lr 0.001
+training age loss 0.1506 || training age accuracy 88.75% || lr 0.001
+Epoch[0/10](740/919) ||
+training mask loss 0.06379 || training mask accuracy 98.98% || lr 0.001
+training gender loss 0.04688 || training gender accuracy 94.92% || lr 0.001
+training age loss 0.1532 || training age accuracy 88.05% || lr 0.001
+Epoch[0/10](760/919) ||
+training mask loss 0.06879 || training mask accuracy 98.28% || lr 0.001
+training gender loss 0.04227 || training gender accuracy 96.09% || lr 0.001
+training age loss 0.1382 || training age accuracy 89.53% || lr 0.001
+Epoch[0/10](780/919) ||
+training mask loss 0.0719 || training mask accuracy 97.89% || lr 0.001
+training gender loss 0.05186 || training gender accuracy 95.23% || lr 0.001
+training age loss 0.1516 || training age accuracy 87.97% || lr 0.001
+Epoch[0/10](800/919) ||
+training mask loss 0.05963 || training mask accuracy 98.75% || lr 0.001
+training gender loss 0.05508 || training gender accuracy 93.91% || lr 0.001
+training age loss 0.1468 || training age accuracy 89.45% || lr 0.001
+Epoch[0/10](820/919) ||
+training mask loss 0.06954 || training mask accuracy 98.44% || lr 0.001
+training gender loss 0.05199 || training gender accuracy 94.30% || lr 0.001
+training age loss 0.1488 || training age accuracy 88.28% || lr 0.001
+Epoch[0/10](840/919) ||
+training mask loss 0.0598 || training mask accuracy 99.06% || lr 0.001
+training gender loss 0.04823 || training gender accuracy 96.02% || lr 0.001
+training age loss 0.1397 || training age accuracy 88.83% || lr 0.001
+Epoch[0/10](860/919) ||
+training mask loss 0.06102 || training mask accuracy 99.14% || lr 0.001
+training gender loss 0.04287 || training gender accuracy 96.09% || lr 0.001
+training age loss 0.1488 || training age accuracy 87.58% || lr 0.001
+Epoch[0/10](880/919) ||
+training mask loss 0.06408 || training mask accuracy 98.98% || lr 0.001
+training gender loss 0.05698 || training gender accuracy 93.75% || lr 0.001
+training age loss 0.1499 || training age accuracy 88.75% || lr 0.001
+Epoch[0/10](900/919) ||
+training mask loss 0.06119 || training mask accuracy 99.06% || lr 0.001
+training gender loss 0.0472 || training gender accuracy 95.08% || lr 0.001
+training age loss 0.1358 || training age accuracy 89.84% || lr 0.001
+ 25%|█████████████████████████████████████▋                                                                                                              | 15/59 [00:01<00:05,  8.64it/s]
+Train f1_score : 0.6130604435410066
+
+
+100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 59/59 [00:05<00:00, 11.18it/s]
+New best model for val f1_score : 2.57%, val acc : 21.61%! saving the best model..
+Mask_loss: 0.69 , Gender_loss: 0.23, Age_loss: 0.46 ||
+Epoch[1/10](20/919) ||
+training mask loss 0.07064 || training mask accuracy 98.12% || lr 0.0009990133642141358
+training gender loss 0.04048 || training gender accuracy 96.56% || lr 0.0009990133642141358
+training age loss 0.1366 || training age accuracy 89.30% || lr 0.0009990133642141358
+Epoch[1/10](40/919) ||
+training mask loss 0.06022 || training mask accuracy 98.98% || lr 0.0009990133642141358
+training gender loss 0.04327 || training gender accuracy 96.09% || lr 0.0009990133642141358
+training age loss 0.1335 || training age accuracy 89.38% || lr 0.0009990133642141358
+Epoch[1/10](60/919) ||
+training mask loss 0.0626 || training mask accuracy 98.91% || lr 0.0009990133642141358
+training gender loss 0.04469 || training gender accuracy 95.55% || lr 0.0009990133642141358
+training age loss 0.1398 || training age accuracy 89.14% || lr 0.0009990133642141358
+Epoch[1/10](80/919) ||
+training mask loss 0.05976 || training mask accuracy 98.91% || lr 0.0009990133642141358
+training gender loss 0.04491 || training gender accuracy 95.16% || lr 0.0009990133642141358
+training age loss 0.1441 || training age accuracy 86.41% || lr 0.0009990133642141358
+Epoch[1/10](100/919) ||
+training mask loss 0.06288 || training mask accuracy 98.59% || lr 0.0009990133642141358
+training gender loss 0.0437 || training gender accuracy 95.86% || lr 0.0009990133642141358
+training age loss 0.1384 || training age accuracy 88.67% || lr 0.0009990133642141358
+Epoch[1/10](120/919) ||
+training mask loss 0.07181 || training mask accuracy 98.05% || lr 0.0009990133642141358
+training gender loss 0.04564 || training gender accuracy 95.23% || lr 0.0009990133642141358
+training age loss 0.1333 || training age accuracy 89.14% || lr 0.0009990133642141358
+Epoch[1/10](140/919) ||
+training mask loss 0.06057 || training mask accuracy 98.98% || lr 0.0009990133642141358
+training gender loss 0.04592 || training gender accuracy 95.86% || lr 0.0009990133642141358
+training age loss 0.1417 || training age accuracy 88.28% || lr 0.0009990133642141358
+Epoch[1/10](160/919) ||
+training mask loss 0.06287 || training mask accuracy 98.20% || lr 0.0009990133642141358
+training gender loss 0.04314 || training gender accuracy 96.09% || lr 0.0009990133642141358
+training age loss 0.1368 || training age accuracy 88.20% || lr 0.0009990133642141358
+Epoch[1/10](180/919) ||
+training mask loss 0.06921 || training mask accuracy 97.89% || lr 0.0009990133642141358
+training gender loss 0.04966 || training gender accuracy 94.22% || lr 0.0009990133642141358
+training age loss 0.1497 || training age accuracy 86.25% || lr 0.0009990133642141358
+Epoch[1/10](200/919) ||
+training mask loss 0.06526 || training mask accuracy 98.59% || lr 0.0009990133642141358
+training gender loss 0.0447 || training gender accuracy 95.86% || lr 0.0009990133642141358
+training age loss 0.1318 || training age accuracy 87.73% || lr 0.0009990133642141358
+Epoch[1/10](220/919) ||
+training mask loss 0.05843 || training mask accuracy 99.22% || lr 0.0009990133642141358
+training gender loss 0.03965 || training gender accuracy 97.03% || lr 0.0009990133642141358
+training age loss 0.1219 || training age accuracy 89.69% || lr 0.0009990133642141358
+Epoch[1/10](240/919) ||
+training mask loss 0.05979 || training mask accuracy 98.98% || lr 0.0009990133642141358
+training gender loss 0.0364 || training gender accuracy 97.34% || lr 0.0009990133642141358
+training age loss 0.1373 || training age accuracy 89.53% || lr 0.0009990133642141358
+Epoch[1/10](260/919) ||
+training mask loss 0.05818 || training mask accuracy 99.22% || lr 0.0009990133642141358
+training gender loss 0.03754 || training gender accuracy 97.03% || lr 0.0009990133642141358
+training age loss 0.1191 || training age accuracy 90.62% || lr 0.0009990133642141358
+Epoch[1/10](280/919) ||
+training mask loss 0.05966 || training mask accuracy 98.91% || lr 0.0009990133642141358
+training gender loss 0.04066 || training gender accuracy 96.88% || lr 0.0009990133642141358
+training age loss 0.1215 || training age accuracy 90.39% || lr 0.0009990133642141358
+Epoch[1/10](300/919) ||
+training mask loss 0.06226 || training mask accuracy 98.83% || lr 0.0009990133642141358
+training gender loss 0.04396 || training gender accuracy 95.94% || lr 0.0009990133642141358
+training age loss 0.1323 || training age accuracy 89.06% || lr 0.0009990133642141358
+Epoch[1/10](320/919) ||
+training mask loss 0.07009 || training mask accuracy 98.20% || lr 0.0009990133642141358
+training gender loss 0.04078 || training gender accuracy 96.48% || lr 0.0009990133642141358
+training age loss 0.1439 || training age accuracy 87.66% || lr 0.0009990133642141358
+Epoch[1/10](340/919) ||
+training mask loss 0.06578 || training mask accuracy 97.97% || lr 0.0009990133642141358
+training gender loss 0.04987 || training gender accuracy 95.08% || lr 0.0009990133642141358
+training age loss 0.1271 || training age accuracy 88.83% || lr 0.0009990133642141358
+Epoch[1/10](360/919) ||
+training mask loss 0.06459 || training mask accuracy 98.52% || lr 0.0009990133642141358
+training gender loss 0.04768 || training gender accuracy 95.55% || lr 0.0009990133642141358
+training age loss 0.1512 || training age accuracy 88.36% || lr 0.0009990133642141358
+Epoch[1/10](380/919) ||
+training mask loss 0.06579 || training mask accuracy 97.97% || lr 0.0009990133642141358
+training gender loss 0.03818 || training gender accuracy 96.80% || lr 0.0009990133642141358
+training age loss 0.137 || training age accuracy 89.92% || lr 0.0009990133642141358
+Epoch[1/10](400/919) ||
+training mask loss 0.0626 || training mask accuracy 98.44% || lr 0.0009990133642141358
+training gender loss 0.04813 || training gender accuracy 95.16% || lr 0.0009990133642141358
+training age loss 0.1307 || training age accuracy 89.61% || lr 0.0009990133642141358
+Epoch[1/10](420/919) ||
+training mask loss 0.06225 || training mask accuracy 98.28% || lr 0.0009990133642141358
+training gender loss 0.04672 || training gender accuracy 95.23% || lr 0.0009990133642141358
+training age loss 0.146 || training age accuracy 88.44% || lr 0.0009990133642141358
+Epoch[1/10](440/919) ||
+training mask loss 0.06299 || training mask accuracy 99.06% || lr 0.0009990133642141358
+training gender loss 0.0382 || training gender accuracy 96.56% || lr 0.0009990133642141358
+training age loss 0.1348 || training age accuracy 88.28% || lr 0.0009990133642141358
+Epoch[1/10](460/919) ||
+training mask loss 0.06152 || training mask accuracy 98.59% || lr 0.0009990133642141358
+training gender loss 0.04289 || training gender accuracy 96.02% || lr 0.0009990133642141358
+training age loss 0.1272 || training age accuracy 90.78% || lr 0.0009990133642141358
+Epoch[1/10](480/919) ||
+training mask loss 0.05945 || training mask accuracy 99.22% || lr 0.0009990133642141358
+training gender loss 0.04854 || training gender accuracy 95.39% || lr 0.0009990133642141358
+training age loss 0.1311 || training age accuracy 90.08% || lr 0.0009990133642141358
+Epoch[1/10](500/919) ||
+training mask loss 0.06054 || training mask accuracy 98.98% || lr 0.0009990133642141358
+training gender loss 0.03807 || training gender accuracy 96.80% || lr 0.0009990133642141358
+training age loss 0.112 || training age accuracy 90.70% || lr 0.0009990133642141358
+Epoch[1/10](520/919) ||
+training mask loss 0.05552 || training mask accuracy 99.14% || lr 0.0009990133642141358
+training gender loss 0.03918 || training gender accuracy 97.03% || lr 0.0009990133642141358
+training age loss 0.1223 || training age accuracy 89.61% || lr 0.0009990133642141358
+Epoch[1/10](540/919) ||
+training mask loss 0.05362 || training mask accuracy 99.61% || lr 0.0009990133642141358
+training gender loss 0.04482 || training gender accuracy 95.86% || lr 0.0009990133642141358
+training age loss 0.126 || training age accuracy 89.22% || lr 0.0009990133642141358
+Epoch[1/10](560/919) ||
+training mask loss 0.05868 || training mask accuracy 98.98% || lr 0.0009990133642141358
+training gender loss 0.04377 || training gender accuracy 96.17% || lr 0.0009990133642141358
+training age loss 0.1309 || training age accuracy 89.14% || lr 0.0009990133642141358
+Epoch[1/10](580/919) ||
+training mask loss 0.0608 || training mask accuracy 98.91% || lr 0.0009990133642141358
+training gender loss 0.04557 || training gender accuracy 96.09% || lr 0.0009990133642141358
+training age loss 0.1269 || training age accuracy 89.61% || lr 0.0009990133642141358
+Epoch[1/10](600/919) ||
+training mask loss 0.06804 || training mask accuracy 98.12% || lr 0.0009990133642141358
+training gender loss 0.04103 || training gender accuracy 96.72% || lr 0.0009990133642141358
+training age loss 0.1393 || training age accuracy 86.25% || lr 0.0009990133642141358
+Epoch[1/10](620/919) ||
+training mask loss 0.07811 || training mask accuracy 97.42% || lr 0.0009990133642141358
+training gender loss 0.04366 || training gender accuracy 96.25% || lr 0.0009990133642141358
+training age loss 0.1242 || training age accuracy 91.17% || lr 0.0009990133642141358
+Epoch[1/10](640/919) ||
+training mask loss 0.06118 || training mask accuracy 99.14% || lr 0.0009990133642141358
+training gender loss 0.03812 || training gender accuracy 96.80% || lr 0.0009990133642141358
+training age loss 0.1268 || training age accuracy 88.44% || lr 0.0009990133642141358
+Epoch[1/10](660/919) ||
+training mask loss 0.06475 || training mask accuracy 98.52% || lr 0.0009990133642141358
+training gender loss 0.04375 || training gender accuracy 96.02% || lr 0.0009990133642141358
+training age loss 0.1225 || training age accuracy 90.16% || lr 0.0009990133642141358
+Epoch[1/10](680/919) ||
+training mask loss 0.06186 || training mask accuracy 98.59% || lr 0.0009990133642141358
+training gender loss 0.04353 || training gender accuracy 96.33% || lr 0.0009990133642141358
+training age loss 0.1215 || training age accuracy 89.84% || lr 0.0009990133642141358
+Epoch[1/10](700/919) ||
+training mask loss 0.06566 || training mask accuracy 98.20% || lr 0.0009990133642141358
+training gender loss 0.03949 || training gender accuracy 96.95% || lr 0.0009990133642141358
+training age loss 0.125 || training age accuracy 89.77% || lr 0.0009990133642141358
+Epoch[1/10](720/919) ||
+training mask loss 0.0568 || training mask accuracy 99.06% || lr 0.0009990133642141358
+training gender loss 0.05467 || training gender accuracy 94.06% || lr 0.0009990133642141358
+training age loss 0.1374 || training age accuracy 87.89% || lr 0.0009990133642141358
+Epoch[1/10](740/919) ||
+training mask loss 0.06093 || training mask accuracy 98.91% || lr 0.0009990133642141358
+training gender loss 0.04093 || training gender accuracy 96.09% || lr 0.0009990133642141358
+training age loss 0.1387 || training age accuracy 89.53% || lr 0.0009990133642141358
+Epoch[1/10](760/919) ||
+training mask loss 0.05943 || training mask accuracy 99.22% || lr 0.0009990133642141358
+training gender loss 0.04518 || training gender accuracy 95.39% || lr 0.0009990133642141358
+training age loss 0.1214 || training age accuracy 90.62% || lr 0.0009990133642141358
+Epoch[1/10](780/919) ||
+training mask loss 0.0599 || training mask accuracy 98.98% || lr 0.0009990133642141358
+training gender loss 0.04639 || training gender accuracy 95.31% || lr 0.0009990133642141358
+training age loss 0.1304 || training age accuracy 89.53% || lr 0.0009990133642141358
+Epoch[1/10](800/919) ||
+training mask loss 0.06356 || training mask accuracy 98.52% || lr 0.0009990133642141358
+training gender loss 0.03928 || training gender accuracy 96.17% || lr 0.0009990133642141358
+training age loss 0.1373 || training age accuracy 88.05% || lr 0.0009990133642141358
+Epoch[1/10](820/919) ||
+training mask loss 0.05776 || training mask accuracy 99.06% || lr 0.0009990133642141358
+training gender loss 0.05004 || training gender accuracy 94.92% || lr 0.0009990133642141358
+training age loss 0.1402 || training age accuracy 88.20% || lr 0.0009990133642141358
+Epoch[1/10](840/919) ||
+training mask loss 0.06002 || training mask accuracy 99.22% || lr 0.0009990133642141358
+training gender loss 0.04861 || training gender accuracy 95.47% || lr 0.0009990133642141358
+training age loss 0.1361 || training age accuracy 88.36% || lr 0.0009990133642141358
+Epoch[1/10](860/919) ||
+training mask loss 0.05698 || training mask accuracy 99.22% || lr 0.0009990133642141358
+training gender loss 0.03876 || training gender accuracy 96.80% || lr 0.0009990133642141358
+training age loss 0.1298 || training age accuracy 89.53% || lr 0.0009990133642141358
+Epoch[1/10](880/919) ||
+training mask loss 0.05517 || training mask accuracy 99.22% || lr 0.0009990133642141358
+training gender loss 0.05081 || training gender accuracy 94.61% || lr 0.0009990133642141358
+training age loss 0.131 || training age accuracy 88.91% || lr 0.0009990133642141358
+Epoch[1/10](900/919) ||
+training mask loss 0.06535 || training mask accuracy 98.59% || lr 0.0009990133642141358
+training gender loss 0.0378 || training gender accuracy 96.95% || lr 0.0009990133642141358
+training age loss 0.142 || training age accuracy 87.19% || lr 0.0009990133642141358
+ 22%|████████████████████████████████▌                                                                                                                   | 13/59 [00:01<00:06,  7.45it/s]
+Train f1_score : 0.6891955809683286
+
+
+100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 59/59 [00:05<00:00, 11.11it/s]
+New best model for val f1_score : 18.27%, val acc : 50.58%! saving the best model..
+Mask_loss: 0.35 , Gender_loss: 0.085, Age_loss: 0.28 ||
+Epoch[2/10](20/919) ||
+training mask loss 0.06076 || training mask accuracy 98.75% || lr 0.000996057350657239
+training gender loss 0.03772 || training gender accuracy 97.11% || lr 0.000996057350657239
+training age loss 0.1333 || training age accuracy 88.36% || lr 0.000996057350657239
+Epoch[2/10](40/919) ||
+training mask loss 0.05997 || training mask accuracy 99.06% || lr 0.000996057350657239
+training gender loss 0.04417 || training gender accuracy 95.94% || lr 0.000996057350657239
+training age loss 0.132 || training age accuracy 88.59% || lr 0.000996057350657239
+Epoch[2/10](60/919) ||
+training mask loss 0.06414 || training mask accuracy 98.67% || lr 0.000996057350657239
+training gender loss 0.04352 || training gender accuracy 95.78% || lr 0.000996057350657239
+training age loss 0.1164 || training age accuracy 89.77% || lr 0.000996057350657239
+Epoch[2/10](80/919) ||
+training mask loss 0.06294 || training mask accuracy 98.52% || lr 0.000996057350657239
+training gender loss 0.04508 || training gender accuracy 95.62% || lr 0.000996057350657239
+training age loss 0.1385 || training age accuracy 87.19% || lr 0.000996057350657239
+Epoch[2/10](100/919) ||
+training mask loss 0.05882 || training mask accuracy 99.06% || lr 0.000996057350657239
+training gender loss 0.04245 || training gender accuracy 95.94% || lr 0.000996057350657239
+training age loss 0.1249 || training age accuracy 89.14% || lr 0.000996057350657239
+Epoch[2/10](120/919) ||
+training mask loss 0.05772 || training mask accuracy 98.98% || lr 0.000996057350657239
+training gender loss 0.03793 || training gender accuracy 96.33% || lr 0.000996057350657239
+training age loss 0.1116 || training age accuracy 90.39% || lr 0.000996057350657239
+Epoch[2/10](140/919) ||
+training mask loss 0.06196 || training mask accuracy 98.91% || lr 0.000996057350657239
+training gender loss 0.03346 || training gender accuracy 98.05% || lr 0.000996057350657239
+training age loss 0.137 || training age accuracy 89.06% || lr 0.000996057350657239
+Epoch[2/10](160/919) ||
+training mask loss 0.05609 || training mask accuracy 99.38% || lr 0.000996057350657239
+training gender loss 0.04099 || training gender accuracy 96.25% || lr 0.000996057350657239
+training age loss 0.1197 || training age accuracy 90.55% || lr 0.000996057350657239
+Epoch[2/10](180/919) ||
+training mask loss 0.0591 || training mask accuracy 99.06% || lr 0.000996057350657239
+training gender loss 0.0373 || training gender accuracy 96.88% || lr 0.000996057350657239
+training age loss 0.1154 || training age accuracy 91.02% || lr 0.000996057350657239
+Epoch[2/10](200/919) ||
+training mask loss 0.06292 || training mask accuracy 98.28% || lr 0.000996057350657239
+training gender loss 0.04085 || training gender accuracy 96.64% || lr 0.000996057350657239
+training age loss 0.123 || training age accuracy 89.61% || lr 0.000996057350657239
+Epoch[2/10](220/919) ||
+training mask loss 0.06 || training mask accuracy 98.98% || lr 0.000996057350657239
+training gender loss 0.03722 || training gender accuracy 96.88% || lr 0.000996057350657239
+training age loss 0.125 || training age accuracy 88.83% || lr 0.000996057350657239
+Epoch[2/10](240/919) ||
+training mask loss 0.06176 || training mask accuracy 98.98% || lr 0.000996057350657239
+training gender loss 0.04176 || training gender accuracy 96.09% || lr 0.000996057350657239
+training age loss 0.1343 || training age accuracy 88.67% || lr 0.000996057350657239
+Epoch[2/10](260/919) ||
+training mask loss 0.0567 || training mask accuracy 99.30% || lr 0.000996057350657239
+training gender loss 0.03801 || training gender accuracy 96.80% || lr 0.000996057350657239
+training age loss 0.1231 || training age accuracy 89.53% || lr 0.000996057350657239
+Epoch[2/10](280/919) ||
+training mask loss 0.0623 || training mask accuracy 98.52% || lr 0.000996057350657239
+training gender loss 0.03615 || training gender accuracy 97.19% || lr 0.000996057350657239
+training age loss 0.1252 || training age accuracy 89.53% || lr 0.000996057350657239
+Epoch[2/10](300/919) ||
+training mask loss 0.05959 || training mask accuracy 99.22% || lr 0.000996057350657239
+training gender loss 0.03944 || training gender accuracy 96.80% || lr 0.000996057350657239
+training age loss 0.1213 || training age accuracy 90.23% || lr 0.000996057350657239
+Epoch[2/10](320/919) ||
+training mask loss 0.0598 || training mask accuracy 99.06% || lr 0.000996057350657239
+training gender loss 0.03987 || training gender accuracy 96.25% || lr 0.000996057350657239
+training age loss 0.1268 || training age accuracy 90.08% || lr 0.000996057350657239
+Epoch[2/10](340/919) ||
+training mask loss 0.05604 || training mask accuracy 99.53% || lr 0.000996057350657239
+training gender loss 0.03906 || training gender accuracy 96.48% || lr 0.000996057350657239
+training age loss 0.1212 || training age accuracy 90.08% || lr 0.000996057350657239
+Epoch[2/10](360/919) ||
+training mask loss 0.05585 || training mask accuracy 99.30% || lr 0.000996057350657239
+training gender loss 0.04671 || training gender accuracy 95.23% || lr 0.000996057350657239
+training age loss 0.1187 || training age accuracy 90.08% || lr 0.000996057350657239
+Epoch[2/10](380/919) ||
+training mask loss 0.05496 || training mask accuracy 99.30% || lr 0.000996057350657239
+training gender loss 0.03243 || training gender accuracy 97.50% || lr 0.000996057350657239
+training age loss 0.1158 || training age accuracy 90.55% || lr 0.000996057350657239
+Epoch[2/10](400/919) ||
+training mask loss 0.05647 || training mask accuracy 98.98% || lr 0.000996057350657239
+training gender loss 0.04118 || training gender accuracy 95.62% || lr 0.000996057350657239
+training age loss 0.123 || training age accuracy 89.53% || lr 0.000996057350657239
+Epoch[2/10](420/919) ||
+training mask loss 0.06177 || training mask accuracy 98.59% || lr 0.000996057350657239
+training gender loss 0.0425 || training gender accuracy 96.09% || lr 0.000996057350657239
+training age loss 0.1261 || training age accuracy 89.38% || lr 0.000996057350657239
+Epoch[2/10](440/919) ||
+training mask loss 0.05979 || training mask accuracy 98.91% || lr 0.000996057350657239
+training gender loss 0.03496 || training gender accuracy 97.66% || lr 0.000996057350657239
+training age loss 0.1114 || training age accuracy 91.02% || lr 0.000996057350657239
+Epoch[2/10](460/919) ||
+training mask loss 0.06418 || training mask accuracy 98.59% || lr 0.000996057350657239
+training gender loss 0.04208 || training gender accuracy 96.33% || lr 0.000996057350657239
+training age loss 0.1133 || training age accuracy 91.48% || lr 0.000996057350657239
+Epoch[2/10](480/919) ||
+training mask loss 0.05974 || training mask accuracy 98.83% || lr 0.000996057350657239
+training gender loss 0.04129 || training gender accuracy 96.41% || lr 0.000996057350657239
+training age loss 0.1216 || training age accuracy 89.77% || lr 0.000996057350657239
+Epoch[2/10](500/919) ||
+training mask loss 0.05918 || training mask accuracy 98.98% || lr 0.000996057350657239
+training gender loss 0.04024 || training gender accuracy 96.64% || lr 0.000996057350657239
+training age loss 0.1349 || training age accuracy 88.44% || lr 0.000996057350657239
+Epoch[2/10](520/919) ||
+training mask loss 0.06214 || training mask accuracy 98.52% || lr 0.000996057350657239
+training gender loss 0.04794 || training gender accuracy 95.31% || lr 0.000996057350657239
+training age loss 0.1239 || training age accuracy 88.36% || lr 0.000996057350657239
+Epoch[2/10](540/919) ||
+training mask loss 0.05928 || training mask accuracy 99.14% || lr 0.000996057350657239
+training gender loss 0.04765 || training gender accuracy 95.70% || lr 0.000996057350657239
+training age loss 0.1294 || training age accuracy 89.14% || lr 0.000996057350657239
+Epoch[2/10](560/919) ||
+training mask loss 0.05733 || training mask accuracy 98.83% || lr 0.000996057350657239
+training gender loss 0.04611 || training gender accuracy 95.23% || lr 0.000996057350657239
+training age loss 0.1184 || training age accuracy 89.38% || lr 0.000996057350657239
+Epoch[2/10](580/919) ||
+training mask loss 0.0632 || training mask accuracy 98.67% || lr 0.000996057350657239
+training gender loss 0.03884 || training gender accuracy 97.03% || lr 0.000996057350657239
+training age loss 0.1353 || training age accuracy 88.44% || lr 0.000996057350657239
+Epoch[2/10](600/919) ||
+training mask loss 0.05631 || training mask accuracy 99.22% || lr 0.000996057350657239
+training gender loss 0.03986 || training gender accuracy 96.48% || lr 0.000996057350657239
+training age loss 0.1219 || training age accuracy 90.08% || lr 0.000996057350657239
+Epoch[2/10](620/919) ||
+training mask loss 0.05524 || training mask accuracy 99.22% || lr 0.000996057350657239
+training gender loss 0.04232 || training gender accuracy 96.25% || lr 0.000996057350657239
+training age loss 0.1152 || training age accuracy 91.02% || lr 0.000996057350657239
+Epoch[2/10](640/919) ||
+training mask loss 0.05622 || training mask accuracy 98.98% || lr 0.000996057350657239
+training gender loss 0.04385 || training gender accuracy 95.16% || lr 0.000996057350657239
+training age loss 0.1333 || training age accuracy 88.44% || lr 0.000996057350657239
+Epoch[2/10](660/919) ||
+training mask loss 0.0594 || training mask accuracy 98.75% || lr 0.000996057350657239
+training gender loss 0.04228 || training gender accuracy 96.56% || lr 0.000996057350657239
+training age loss 0.1322 || training age accuracy 89.22% || lr 0.000996057350657239
+Epoch[2/10](680/919) ||
+training mask loss 0.05994 || training mask accuracy 98.75% || lr 0.000996057350657239
+training gender loss 0.04224 || training gender accuracy 96.17% || lr 0.000996057350657239
+training age loss 0.106 || training age accuracy 91.02% || lr 0.000996057350657239
+Epoch[2/10](700/919) ||
+training mask loss 0.06414 || training mask accuracy 98.36% || lr 0.000996057350657239
+training gender loss 0.04282 || training gender accuracy 96.56% || lr 0.000996057350657239
+training age loss 0.1112 || training age accuracy 91.56% || lr 0.000996057350657239
+Epoch[2/10](720/919) ||
+training mask loss 0.06041 || training mask accuracy 98.91% || lr 0.000996057350657239
+training gender loss 0.04103 || training gender accuracy 96.33% || lr 0.000996057350657239
+training age loss 0.108 || training age accuracy 91.25% || lr 0.000996057350657239
+Epoch[2/10](740/919) ||
+training mask loss 0.05629 || training mask accuracy 99.06% || lr 0.000996057350657239
+training gender loss 0.04402 || training gender accuracy 95.31% || lr 0.000996057350657239
+training age loss 0.1322 || training age accuracy 89.77% || lr 0.000996057350657239
+Epoch[2/10](760/919) ||
+training mask loss 0.0556 || training mask accuracy 99.22% || lr 0.000996057350657239
+training gender loss 0.04398 || training gender accuracy 96.33% || lr 0.000996057350657239
+training age loss 0.1281 || training age accuracy 89.22% || lr 0.000996057350657239
+Epoch[2/10](780/919) ||
+training mask loss 0.05845 || training mask accuracy 98.98% || lr 0.000996057350657239
+training gender loss 0.03826 || training gender accuracy 97.03% || lr 0.000996057350657239
+training age loss 0.1299 || training age accuracy 88.83% || lr 0.000996057350657239
+Epoch[2/10](800/919) ||
+training mask loss 0.05286 || training mask accuracy 99.61% || lr 0.000996057350657239
+training gender loss 0.03653 || training gender accuracy 96.80% || lr 0.000996057350657239
+training age loss 0.1168 || training age accuracy 91.09% || lr 0.000996057350657239
+Epoch[2/10](820/919) ||
+training mask loss 0.05609 || training mask accuracy 99.14% || lr 0.000996057350657239
+training gender loss 0.03548 || training gender accuracy 96.72% || lr 0.000996057350657239
+training age loss 0.1322 || training age accuracy 88.59% || lr 0.000996057350657239
+Epoch[2/10](840/919) ||
+training mask loss 0.05385 || training mask accuracy 99.45% || lr 0.000996057350657239
+training gender loss 0.03322 || training gender accuracy 97.97% || lr 0.000996057350657239
+training age loss 0.1254 || training age accuracy 89.69% || lr 0.000996057350657239
+Epoch[2/10](860/919) ||
+training mask loss 0.05942 || training mask accuracy 98.67% || lr 0.000996057350657239
+training gender loss 0.03415 || training gender accuracy 97.03% || lr 0.000996057350657239
+training age loss 0.1187 || training age accuracy 89.69% || lr 0.000996057350657239
+Epoch[2/10](880/919) ||
+training mask loss 0.06265 || training mask accuracy 99.06% || lr 0.000996057350657239
+training gender loss 0.03556 || training gender accuracy 97.11% || lr 0.000996057350657239
+training age loss 0.1159 || training age accuracy 90.39% || lr 0.000996057350657239
+Epoch[2/10](900/919) ||
+training mask loss 0.05722 || training mask accuracy 99.30% || lr 0.000996057350657239
+training gender loss 0.03434 || training gender accuracy 97.11% || lr 0.000996057350657239
+training age loss 0.1163 || training age accuracy 90.62% || lr 0.000996057350657239
+Train f1_score : 0.7163209107848046
+Calculating validation results...
+
+
+100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 59/59 [00:05<00:00, 11.24it/s]
+Model didn't updated!!
+[Val] f1 : 10.79%, acc : 34.74%, Mask_loss: 0.45 , Gender_loss: 0.13, Age_loss: 0.36 ||
+best_f1 : 18.27%, best acc : 50.58%, best_mask_loss: 0.35, best_gender_loss: 0.085, best_age_loss: 0.28
+Epoch[3/10](20/919) ||
+training mask loss 0.05818 || training mask accuracy 99.14% || lr 0.0009911436253643444
+training gender loss 0.03931 || training gender accuracy 96.17% || lr 0.0009911436253643444
+training age loss 0.1173 || training age accuracy 89.61% || lr 0.0009911436253643444
+Epoch[3/10](40/919) ||
+training mask loss 0.06573 || training mask accuracy 98.12% || lr 0.0009911436253643444
+training gender loss 0.03795 || training gender accuracy 97.19% || lr 0.0009911436253643444
+training age loss 0.1191 || training age accuracy 90.47% || lr 0.0009911436253643444
+Epoch[3/10](60/919) ||
+training mask loss 0.05561 || training mask accuracy 99.22% || lr 0.0009911436253643444
+training gender loss 0.04086 || training gender accuracy 96.80% || lr 0.0009911436253643444
+training age loss 0.1182 || training age accuracy 91.02% || lr 0.0009911436253643444
+Epoch[3/10](80/919) ||
+training mask loss 0.05478 || training mask accuracy 99.45% || lr 0.0009911436253643444
+training gender loss 0.03921 || training gender accuracy 97.11% || lr 0.0009911436253643444
+training age loss 0.1175 || training age accuracy 90.55% || lr 0.0009911436253643444
+Epoch[3/10](100/919) ||
+training mask loss 0.05847 || training mask accuracy 98.83% || lr 0.0009911436253643444
+training gender loss 0.03776 || training gender accuracy 96.80% || lr 0.0009911436253643444
+training age loss 0.1205 || training age accuracy 89.84% || lr 0.0009911436253643444
+Epoch[3/10](120/919) ||
+training mask loss 0.05475 || training mask accuracy 99.38% || lr 0.0009911436253643444
+training gender loss 0.04055 || training gender accuracy 96.88% || lr 0.0009911436253643444
+training age loss 0.1285 || training age accuracy 89.06% || lr 0.0009911436253643444
+Epoch[3/10](140/919) ||
+training mask loss 0.0557 || training mask accuracy 99.14% || lr 0.0009911436253643444
+training gender loss 0.04016 || training gender accuracy 96.56% || lr 0.0009911436253643444

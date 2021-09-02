@@ -1,0 +1,26 @@
+Traceback (most recent call last):
+  File "train.py", line 437, in <module>
+    train(data_dir, model_dir, args)
+  File "train.py", line 234, in train
+    mask_out, gender_out, age_out = model(inputs)
+  File "/opt/conda/lib/python3.8/site-packages/torch/nn/modules/module.py", line 722, in _call_impl
+    result = self.forward(*input, **kwargs)
+  File "/opt/ml/code/ImageClassification/model.py", line 73, in forward
+    x = self.feature_net(x)
+  File "/opt/conda/lib/python3.8/site-packages/torch/nn/modules/module.py", line 722, in _call_impl
+    result = self.forward(*input, **kwargs)
+  File "/opt/conda/lib/python3.8/site-packages/efficientnet_pytorch/model.py", line 314, in forward
+    x = self.extract_features(inputs)
+  File "/opt/conda/lib/python3.8/site-packages/efficientnet_pytorch/model.py", line 296, in extract_features
+    x = block(x, drop_connect_rate=drop_connect_rate)
+  File "/opt/conda/lib/python3.8/site-packages/torch/nn/modules/module.py", line 722, in _call_impl
+    result = self.forward(*input, **kwargs)
+  File "/opt/conda/lib/python3.8/site-packages/efficientnet_pytorch/model.py", line 106, in forward
+    x = self._bn0(x)
+  File "/opt/conda/lib/python3.8/site-packages/torch/nn/modules/module.py", line 722, in _call_impl
+    result = self.forward(*input, **kwargs)
+  File "/opt/conda/lib/python3.8/site-packages/torch/nn/modules/batchnorm.py", line 131, in forward
+    return F.batch_norm(
+  File "/opt/conda/lib/python3.8/site-packages/torch/nn/functional.py", line 2014, in batch_norm
+    return torch.batch_norm(
+RuntimeError: CUDA out of memory. Tried to allocate 118.00 MiB (GPU 0; 31.75 GiB total capacity; 5.50 GiB already allocated; 87.75 MiB free; 5.60 GiB reserved in total by PyTorch)

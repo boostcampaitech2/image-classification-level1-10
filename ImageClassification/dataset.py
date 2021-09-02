@@ -10,6 +10,8 @@ from PIL import Image
 from torch.utils.data import Dataset, Subset, random_split
 from torchvision import transforms
 from torchvision.transforms import *
+from sklearn.model_selection import train_test_split
+from collections import Counter
 
 IMG_EXTENSIONS = [
     ".jpg", ".JPG", ".jpeg", ".JPEG", ".png",
@@ -25,6 +27,10 @@ class BaseAugmentation:
     def __init__(self, resize, mean, std, **args):
         self.transform = transforms.Compose([
             Resize(resize, Image.BILINEAR),
+            # transforms.RandomHorizontalFlip(p=0.5),
+            # transforms.RandomRotation(30, fill=255),
+            # transforms.ColorJitter(
+            # brightness=0.5, contrast=0.5, saturation=0.5, hue=0.5),
             ToTensor(),
             Normalize(mean=mean, std=std),
         ])
@@ -248,17 +254,35 @@ class MaskSplitByProfileDataset(MaskBaseDataset):
         이후 `split_dataset` 에서 index 에 맞게 Subset 으로 dataset 을 분기합니다.
     """
 
-    def __init__(self, data_dir, mean=(0.548, 0.504, 0.479), std=(0.237, 0.247, 0.246), val_ratio=0.2):
+    def __init__(self, data_dir, mean=(0.560, 0.524, 0.501), std=(0.237, 0.247, 0.246), val_ratio=0.2):
         self.indices = defaultdict(list)
         super().__init__(data_dir, mean, std, val_ratio)
 
     @staticmethod
     def _split_profile(profiles, val_ratio):
         length = len(profiles)
-        n_val = int(length * val_ratio)
-
-        val_indices = set(random.choices(range(length), k=n_val))
-        train_indices = set(range(length)) - val_indices
+        # n_val = int(length * val_ratio)
+        # val_indices = set(random.choices(range(length), k=n_val))
+        # train_indices = set(range(length)) - val_indices
+        indices_all = [i for i in range(length)]
+        labels = []
+        for profile in profiles:
+            _, gender, _, age = profile.split("_")
+            gender_label = GenderLabels.from_str(gender)  # male:0, female:1
+            # YOUNG = 0, MIDDLE = 1, OLD = 2
+            age_label = AgeLabels.from_number(age)
+            labels.append(3*gender_label+age_label)
+        train_indices, val_indices, train_labels, _ = train_test_split(
+            indices_all, labels, test_size=val_ratio, stratify=labels)
+        labels_counter = Counter(train_labels)
+        max_cnt = max(labels_counter.values())
+        train_labels = np.array(train_labels)
+        for label in labels_counter:
+            label_cnt = labels_counter[label]
+            label_index_list = np.where(train_labels == label)[0]
+            idx = list(np.random.choice(
+                label_index_list, max_cnt-label_cnt, replace=True))
+            train_indices.extend(idx)
         return {
             "train": train_indices,
             "val": val_indices
@@ -296,6 +320,19 @@ class MaskSplitByProfileDataset(MaskBaseDataset):
                     self.indices[phase].append(cnt)
                     cnt += 1
 
+    def __getitem__(self, index):
+        assert self.transform is not None, ".set_tranform 메소드를 이용하여 transform 을 주입해주세요"
+
+        image = self.read_image(index)
+        mask_label = self.get_mask_label(index)
+        gender_label = self.get_gender_label(index)
+        age_label = self.get_age_label(index)
+        # multi_class_label = self.encode_multi_class(
+        #     mask_label, gender_label, age_label)
+
+        image_transform = self.transform(image)
+        return image_transform, [mask_label, gender_label, age_label]
+
     def split_dataset(self) -> List[Subset]:
         return [Subset(self, indices) for phase, indices in self.indices.items()]
 
@@ -318,3 +355,65 @@ class TestDataset(Dataset):
 
     def __len__(self):
         return len(self.img_paths)
+
+
+class CroppedDataset(Dataset):
+    num_classes = 3 * 2 * 3
+
+    def __init__(self, data_dir, mean=(0.560, 0.524, 0.501), std=(0.237, 0.247, 0.246), val_ratio=0.2):
+        self.data_dir = data_dir
+        self.val_ratio = val_ratio
+        self.mean = mean
+        self.std = std
+        self.paths = []
+        self.labels = []
+        self.transform = None
+        self.setup()
+
+    def setup(self):
+        for label in os.listdir(self.data_dir):
+            path = os.path.join(self.data_dir, label)
+            images = os.listdir(path)
+            for image in images:
+                image_path = os.path.join(path, image)
+                self.paths.append(image_path)
+                self.labels.append(int(label))
+
+    def __getitem__(self, idx):
+        image = Image.open(self.paths[idx])
+        image.show()
+        label = self.labels[idx]
+        mask_label, gender_label, age_label = MaskBaseDataset.decode_multi_class(
+            label)
+        if self.transform:
+            image = self.transform(image)
+        return image, [mask_label, gender_label, age_label]
+
+    def split_dataset(self):
+        indices = [i for i in range(len(self.paths))]
+        train_indices, val_indices, train_labels, _ = train_test_split(
+            indices, self.labels, test_size=self.val_ratio, stratify=self.labels)
+        # OverSample the train_data
+        labels_counter = Counter(train_labels)
+        max_cnt = max(labels_counter.values())
+        train_labels = np.array(train_labels)
+        for label in labels_counter:
+            label_cnt = labels_counter[label]
+            label_index_list = np.where(train_labels == label)[0]
+            idx = list(np.random.choice(
+                label_index_list, max_cnt-label_cnt, replace=True))
+            train_indices.extend(idx)
+        return Subset(self, train_indices), Subset(self, val_indices)
+
+    def __len__(self):
+        return len(self.paths)
+
+    def set_transform(self, transform):
+        self.transform = transform
+
+
+if __name__ == "__main__":
+    data = CroppedDataset("/opt/ml/input/data/train/cropped/train")
+    train, val = data.split_dataset()
+    img, label = next(iter(train))
+    print(img.size)

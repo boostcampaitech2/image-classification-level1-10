@@ -1,6 +1,8 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+import torchvision
+from efficientnet_pytorch import EfficientNet
 
 
 class BaseModel(nn.Module):
@@ -38,16 +40,38 @@ class BaseModel(nn.Module):
 class MyModel(nn.Module):
     def __init__(self, num_classes):
         super().__init__()
-
-        """
-        1. 위와 같이 생성자의 parameter 에 num_claases 를 포함해주세요.
-        2. 나만의 모델 아키텍쳐를 디자인 해봅니다.
-        3. 모델의 output_dimension 은 num_classes 로 설정해주세요.
-        """
+        self.feature_net = EfficientNet.from_pretrained(
+            "efficientnet-b4")  # extract feature 1000
+        # self.feature_net = torchvision.models.resnext50_32x4d(pretrained=True)
+        self.gender_layer = nn.Sequential(
+            nn.Linear(1000, 512),
+            nn.ReLU(),
+            nn.Linear(512, 256),
+            nn.ReLU(),
+            nn.Linear(256, 2)
+        )
+        self.mask_layer = nn.Sequential(
+            nn.Linear(1000, 512),
+            nn.ReLU(),
+            nn.Linear(512, 3)
+        )
+        self.age_layer = nn.Sequential(
+            nn.Linear(1000, 512),
+            nn.ReLU(),
+            nn.Linear(512, 256),
+            nn.ReLU(),
+            nn.Dropout(),
+            nn.Linear(256, 256),
+            nn.ReLU(),
+            nn.Dropout(),
+            nn.Linear(256, 128),
+            nn.ReLU(),
+            nn.Linear(128, 3)
+        )
 
     def forward(self, x):
-        """
-        1. 위에서 정의한 모델 아키텍쳐를 forward propagation 을 진행해주세요
-        2. 결과로 나온 output 을 return 해주세요
-        """
-        return x
+        x = self.feature_net(x)
+        x_gender = self.gender_layer(x)
+        x_age = self.age_layer(x)
+        x_mask = self.mask_layer(x)
+        return x_mask, x_gender, x_age
