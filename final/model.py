@@ -19,11 +19,11 @@ class CustomModel(nn.Module) :
             nn.Dropout(p = 0.3),
             nn.Linear(256, num_classes, bias = True)
         )
-
+        self.resnext.fc = self.final_layer
+        torch.nn.init.xavier_uniform_(self.resnext.fc[0].weight)
+        stdv = 1.0 / np.sqrt(self.resnext.fc[0].in_features)
+        self.resnext.fc[0].bias.data.uniform_(-stdv, stdv)
+        
     def forward(self, x) :
         x = self.resnext(x)
-        x.fc = self.final_layer
-        torch.nn.init.xavier_uniform_(x.fc[0].weight)
-        stdv = 1.0 / np.sqrt(x.fc[0].in_features)
-        x.fc[0].bias.data.uniform_(-stdv, stdv)
         return x
