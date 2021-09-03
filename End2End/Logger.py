@@ -1,7 +1,7 @@
 import os
 import torch
 
-ex_name = 'Vgg19_256'
+ex_name = 'Effi_after_dmlp'
 log_path = f'./logs/{ex_name}.txt'
 print(f'Logging to -> {log_path}')
 

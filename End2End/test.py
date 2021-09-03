@@ -10,7 +10,7 @@ import Networks
 
 batch_size = 128
 weight_base = './weight'
-weight_fname = 'oversam_12_f1-98_99%.pth'
+weight_fname = 'Vgg19_256_semi_final_16_f1-89_89%.pth'
 weight_path = os.path.join(weight_base, weight_fname)
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -19,12 +19,9 @@ if torch.cuda.is_available():
 
 # model = Networks.Efficientnet_b2()
 
-model = timm.create_model("efficientnet_b2", pretrained=False)
-terminal = model.classifier
-terminal.out_features=18
+# model = timm.create_model("efficientnet_b2", pretrained=False)
+model = Networks.Vgg19_revised()
 weight = torch.load(weight_path)
-# print(weight['state_dict'])
-# exit()
 model.load_state_dict(weight['state_dict'])
 print(f'[Weight]:\t {weight_path} loaded')
 
@@ -50,4 +47,4 @@ for k in sheet['ImageID']:
     tmparr.append(pred_dict[k])
 
 sheet['ans'] = tmparr
-sheet.to_csv('./submissions/sub_over_99__e.csv', index=False)
+sheet.to_csv('./submissions/subsemifinal.csv', index=False)

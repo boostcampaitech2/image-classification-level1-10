@@ -10,6 +10,7 @@ import albumentations.pytorch as AP
 import numpy as np
 from PIL import Image
 from random import choices, randint
+import torch
 
 dataroot = '/opt/ml/input/cropped'
 recur = False
@@ -21,20 +22,20 @@ print(f'[Basesize]:\t{basesize}')
 n_workers = {'train': 4, 'test': 4}
 
 baseA = A.Compose([
-    A.CoarseDropout(max_holes=2, max_height=int(basesize/7), max_width=int(basesize/7)),
-    A.CoarseDropout(max_holes=1, max_height=int(basesize/5), max_width=int(basesize/6), p=0.3),
-    A.ElasticTransform(alpha=1, sigma=15, alpha_affine=15, p=0.35),
+    A.CoarseDropout(max_holes=2, max_height=int(basesize/8), max_width=int(basesize/8)),
+    A.CoarseDropout(max_holes=1, max_height=int(basesize/6), max_width=int(basesize/7), p=0.3),
+    A.ElasticTransform(alpha=1, sigma=15, alpha_affine=15, p=0.2),
     A.HorizontalFlip(),
     A.Normalize(mean=(0.5435222, 0.49131881, 0.4613538), std=(0.23546599, 0.23950848, 0.24674263)),
     AP.transforms.ToTensorV2(),
 ])
 
 suplA = A.Compose([
-    A.Rotate(limit=30, p=0.8),
-    A.RandomBrightnessContrast(p=0.8),
+    A.Rotate(limit=20, p=0.8),
+    A.RandomBrightnessContrast(p=0.6),
     A.GaussNoise(p=0.3),
-    A.GridDistortion(),
-    A.ElasticTransform(alpha=1, sigma=30, alpha_affine=30),
+    A.GridDistortion(p=0.7),
+    A.ElasticTransform(alpha=1, sigma=30, alpha_affine=30, p=0.7),
 ])
 
 maskT = copy.deepcopy(baseA)
@@ -46,9 +47,10 @@ transform_dict = {'mask': maskT, 'gender': gendT, 'age': ageT}
 
 
 def onehot(y, n_classes=18):
-    onehot_label = [0] * n_classes
-    onehot_label[y] = 1
-    return np.array(onehot_label)
+    onehot_label = [0.] * n_classes
+    if y != -1:
+        onehot_label[y] = 1.
+    return torch.tensor(np.array(onehot_label))
 
 def train_val_dataset(dataset, val_split=0.2):
     train_idx, val_idx = train_test_split(list(range(len(dataset))), test_size=val_split)
@@ -57,7 +59,7 @@ def train_val_dataset(dataset, val_split=0.2):
     datasets['val'] = Subset(dataset, val_idx)
     return datasets
 
-def train_val_splits(dataset_class, val_split=0.2):
+def train_val_splits(dataset_class, val_split=0.1):
     all_imgs = glob(f'{dataroot}/train/**/*.*')
     ids = list(set([x.split('/')[-1].split('_')[0] for x in all_imgs]))
     val_ids = choices(ids, k=int(len(ids)*val_split))
@@ -75,7 +77,7 @@ def load_data(isTrain, batch_size, name=None, expand=False):
             # dataset = train_val_dataset(ProjectedDataset(name=name, isTrain=True))
         elif expand:
             print('[Dataset]:\t NormalDataset_oversampled loaded')
-            dataset = train_val_splits(NormalDataset_oversampled, val_split=0.2)
+            dataset = train_val_splits(NormalDataset_oversampled, val_split=0.1)
         # else:
         #     print('[Dataset]:\t NormalDataset loaded')
         #     dataset = train_val_dataset(NormalDataset(isTrain=True))
@@ -116,10 +118,10 @@ class NormalDataset_oversampled(Dataset):
         self.n_class = 18
         self.isTrain = isTrain
         self.isVal = isVal
-        self.expand_ratio = 0.5
+        self.expand_ratio = 0.6
         self.ids = ids
         self.supl_min_idx = None
-        self.cutmix_prob = 0.5
+        self.cutmix_prob = 0.7
         print(f'[CutMix]:\t using CutMix with prob={self.cutmix_prob}')
         self._get_xy()
 
@@ -130,32 +132,103 @@ class NormalDataset_oversampled(Dataset):
         fname = self.x[idx].split('/')[-1]
         X = np.array(Image.open(self.x[idx]))
         X = self._preprocess(X)
+
+        # print(f'_preprocess: {X.shape}, {type(X)}')
         
         if self.isTrain:
-            y = onehot(self.y[idx])
+            y_scal = self.y[idx]
+            y_soft = onehot(self.y[idx])
+            # y_a = self.y[idx]
+            # y_b = 0
+            # ratio = 0
+            if not self.isVal:
+                y = self._label_smooth(y_soft, y_scal, fname)
+            if randint(1,10)/10. <= self.cutmix_prob and not self.isVal:
+                X, y_soft = self._cutmix(X, y_soft)
+                # X, y_b, ratio = self._cutmix(X)
             if idx >= self.supl_min_idx:
                 X = suplA(image=X)['image']
-            elif randint(1,10)/10. <= self.cutmix_prob:
-                X, y = self._cutmix(X, y)
             X = baseA(image=X)['image']
-            return X, y
+
+            if not self.isVal:
+                return X, y_soft
+                # return X, y_a, y_b, ratio
+            else:
+                # return X, y_soft
+                return X, y_scal
         
         else:
             X = baseA(image=X)['image']
             return X, fname
+
+    def _label_smooth(self, y_soft, y_scal, fname):
+        smoothness = 0.3
+        token = fname.split('/')[-1].split('_')[-2]
+        if token.isdigit():
+            real_age = int( fname.split('/')[-1].split('_')[-2] )
+        else:
+            real_age = int( fname.split('/')[-1].split('_')[-3] )
+        age = [
+            [0,3,6,9,12,15],
+            [1,4,7,10,13,16],
+            [2,5,8,11,14,17]]
+        
+        if y_scal in age[0]: # 30
+            ratio = ((real_age-15)/(45-15)) * smoothness
+            if ratio > 0.0:
+                y_soft = y_soft * (1-ratio) + onehot(y_scal + 1) * (ratio)
+        
+        if y_scal in age[1]: # 30~60
+            ratio_left = ((real_age-45) / (15 - 45) ) * smoothness
+            ratio_right = ((real_age-45) / (75 - 45) ) * smoothness
+            if ratio_left > 0.0:
+                ratio = ratio_left
+                y_soft = y_soft * (1-ratio) + onehot(y_scal - 1) * (ratio)
+            if ratio_right > 0.0:
+                ratio = ratio_right
+                y_soft = y_soft * (1-ratio) + onehot(y_scal + 1) * (ratio)
+
+        if y_scal in age[2]: # 60
+            ratio = (real_age-75) / (45-75)* smoothness
+            if ratio > 0.0:
+                y_soft = y_soft * (1-ratio) + onehot(y_scal - 1) * (ratio)
+
+        return y_soft
+
+        # onehot으로 반환
+    
     def _cutmix(self, X, y):
         a = randint(int(basesize/5), int(basesize/5 * 3))
         b = randint(a+int(basesize/7), int(basesize/5*4))
 
         randIdx = randint(0,self.__len__()-1)
         randImg = self._preprocess(np.array(Image.open(self.x[randIdx])))
+        randLab = onehot(self.y[randIdx])
         X[:, a:b, :] = randImg[:, a:b, :]
         
         ratio = (b-a)/(basesize*3/5)
-        randLab = onehot(self.y[randIdx])
+        # y_b = self.y[randIdx]
 
         mixed_label = y*(1-ratio) + randLab*(ratio)
+        
+        # print(f'CutMix: {X.shape},  {type(X)}')
         return X, mixed_label
+
+    # def _cutmix(self, X):
+    #     a = randint(int(basesize/5), int(basesize/5 * 3))
+    #     b = randint(a+int(basesize/7), int(basesize/5*4))
+
+    #     randIdx = randint(0,self.__len__()-1)
+    #     randImg = self._preprocess(np.array(Image.open(self.x[randIdx])))
+    #     X[:, a:b, :] = randImg[:, a:b, :]
+        
+    #     ratio = (b-a)/(basesize*3/5)
+    #     y_b = self.y[randIdx]
+
+    #     # mixed_label = y*(1-ratio) + randLab*(ratio)
+        
+    #     # print(f'CutMix: {X.shape},  {type(X)}')
+    #     return X, y_b, ratio
 
     def _preprocess(self, X: str)->Image:
         X = A.Resize(basesize,basesize)(image=X)['image']

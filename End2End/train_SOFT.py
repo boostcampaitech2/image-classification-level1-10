@@ -15,13 +15,13 @@ lr_scheduler
 '''
 
 batch_size = 128
-n_epochs = 70
+n_epochs = 50
 # lr = 5e-5
 lr = 1e-2
 loss = 5
 f1 = 0.1
 
-model = Networks.Vgg19_revised()
+model = Networks.Efficientnet_b2()
 # model = Networks.Efficientnet_b2()
 # normal_data = Data.NormalLoader(isTrain=True, batch_size=batch_size)
 normal_data = Data.load_data(True, batch_size, name=None, expand=True)
@@ -50,16 +50,16 @@ if torch.cuda.is_available():
 optim = torch.optim.SGD(model.parameters(), lr=lr, momentum=0.9)
 # criterion = Losses.FocalLoss(alpha=1.25, gamma=2.2)
 # criterion = Losses.FocalLogLoss(n_epochs)
-criterion = Losses.LabelSmoothingLoss()
+criterion = Losses.SoftmaxProbs()
 # criterion = (alpha=0.25)
 # lr_scheduler = CosineAnnealingLR(optim, T_max=100, eta_min=1e-13)
-lr_scheduler = CosineAnnealingLR(optim, T_max=100, eta_min=1e-12)
+lr_scheduler = CosineAnnealingLR(optim, T_max=200, eta_min=1e-12)
 # lr_scheduler = CyclicLR(optim, base_lr=1e-7, step_size_up=5, max_lr=1e-4, 
 #                                               gamma=0.5, mode='exp_range')
 
 softmax_func = torch.nn.Softmax(dim=1)
 
-print(f"[{'Epoch':<5} {'LR':<6} {'F1': <5} {'Loss':<6} {'Acc':<5}]")
+print(f"[{'Epoch':<5} {'F1': <5} {'Acc':<5}]")
 curr_acc = 0.10
 best_accuracy = 0.10
 curr_f1 = 0.10
@@ -68,18 +68,19 @@ curr_lr = lr
 best_f1_train = 0.10
 for epoch in range(n_epochs):
     model.to(device)
-    # for idx, (images, label_soft) in enumerate(tqdm(normal_data['train'],bar_format='{l_bar}{bar:10}{r_bar}{bar:-10b}', desc=f'[{epoch:^5} {curr_lr*1000::^1.4f} {f1*100:>.2f} {loss:^5.4f} {curr_acc*100:3.2f}%]')):
 
     correct, total = 0, 0
-    for idx, (images, label_a, label_b, ratio) in enumerate(tqdm(normal_data['train'],bar_format='{l_bar}{bar:10}{r_bar}{bar:-10b}', desc=f'[{epoch:^5} {curr_lr*1000::^1.4f} {f1*100:>.2f} {loss:^5.4f} {curr_acc*100:3.2f}%]')):
+    for idx, (images, label_soft) in enumerate(tqdm(normal_data['train'], desc=f'[{epoch:^5} {f1*100:>.2f} {curr_acc*100:3.2f}%]')):
+    # for idx, (images, label_a, label_b, ratio) in enumerate(tqdm(normal_data['train'],bar_format='{l_bar}{bar:10}{r_bar}{bar:-10b}', desc=f'[{epoch:^5} {curr_lr*1000::^1.4f} {f1*100:>.2f} {loss:^5.4f} {curr_acc*100:3.2f}%]')):
         images = images.to(device)
-        # labels = label_soft.to(device)
-        label_a = label_a.to(device)
-        label_b = label_b.to(device)
-        ratio = ratio.to(device)
+        labels = label_soft.to(device)
+        # label_a = label_a.to(device)
+        # label_b = label_b.to(device)
+        # ratio = ratio.to(device)
         
         outputs = model(images)
-        loss = criterion(outputs, label_a, label_b, ratio)
+        # loss = criterion(outputs, label_a, label_b, ratio)
+        loss = criterion(outputs, labels)
         
         optim.zero_grad()
         loss.backward()
@@ -91,10 +92,12 @@ for epoch in range(n_epochs):
 
         outputs = outputs.detach().cpu()
         _, predicted = torch.max(outputs.data, 1)
-        labels = torch.tensor([label_a[i] if ratio[i] <= 0.5 else label_b[i] for i in range(len(label_a))])
+        _, labels_hot = torch.max(labels, 1)
+        labels_hot = labels_hot.to('cpu')
+        # labels = torch.tensor([label_a[i] if ratio[i] <= 0.5 else label_b[i] for i in range(len(label_a))])
         total += labels.size(0)
-        correct += (predicted == labels).sum().item()
-        f1_train = f1_score(labels, predicted, average='macro')
+        correct += (predicted == labels_hot).sum().item()
+        f1_train = f1_score(labels_hot, predicted, average='macro')
         wandb.log({'f1_train': f1_train })
         
 
