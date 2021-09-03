@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.metrics import f1_score
 import torch
-from torch.optim.lr_scheduler import StepLR
+from torch.optim.lr_scheduler import StepLR, CosineAnnealingLR
 from torch.utils.data import DataLoader
 from torch.utils.tensorboard import SummaryWriter
 
@@ -147,6 +147,7 @@ def train(data_dir, bbox_dir, model_dir, args):
         weight_decay=5e-4
     )
     scheduler = StepLR(optimizer, args.lr_decay_step, gamma=0.5)
+    # scheduler = CosineAnnealingLR(optimizer, T_max=50, eta_min=0)
 
     # -- logging
     logger = SummaryWriter(log_dir=save_dir)
@@ -180,9 +181,12 @@ def train(data_dir, bbox_dir, model_dir, args):
             true_age = torch.argmax(labels_age, dim=-1)
 
 
-            loss_mask = criterion(outs_mask, labels_mask)
-            loss_gender = criterion(outs_gender, labels_gender)
-            loss_age = criterion(outs_age, labels_age)
+            loss_mask = criterion(outs_mask, labels_mask, [5, 1, 1])
+            loss_gender = criterion(outs_gender, labels_gender, [1042, 1658])
+            loss_age = criterion(outs_age, labels_age, [1281, 1227, 192])
+            # loss_mask = criterion(outs_mask, labels_mask)
+            # loss_gender = criterion(outs_gender, labels_gender)
+            # loss_age = criterion(outs_age, labels_age)
 
             loss_mask.backward(retain_graph=True)
             loss_gender.backward(retain_graph=True)
@@ -237,9 +241,13 @@ def train(data_dir, bbox_dir, model_dir, args):
                 y_true[idx * len(labels):(idx+1) * len(labels)] = labels
                 y_pred[idx * len(preds):(idx+1) * len(preds)] = preds
 
-                loss_mask = criterion(outs_mask, labels_mask)
-                loss_gender = criterion(outs_gender, labels_gender)
-                loss_age = criterion(outs_age, labels_age)
+                loss_mask = criterion(outs_mask, labels_mask, [5, 1, 1])
+                loss_gender = criterion(outs_gender, labels_gender, [1042, 1658])
+                loss_age = criterion(outs_age, labels_age, [1281, 1227, 192])
+                # loss_mask = criterion(outs_mask, labels_mask)
+                # loss_gender = criterion(outs_gender, labels_gender)
+                # loss_age = criterion(outs_age, labels_age)
+
                 loss_item = (loss_mask.item() + loss_gender.item() + loss_age.item())
 
                 acc_item = (labels == preds).sum().item()
