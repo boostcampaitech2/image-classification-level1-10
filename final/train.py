@@ -21,12 +21,9 @@ import torch.optim as optim
 import torch.nn.functional as F
 from torchvision.transforms import Resize, ToTensor, Normalize
 
-#from torchvision import transforms, utils
-#from torchvision.transforms import Resize, ToTensor, Normalize
+from torchvision import transforms, utils
+from torchvision.transforms import Resize, ToTensor, Normalize
 from torch.utils.data import Dataset, DataLoader, random_split, SubsetRandomSampler, WeightedRandomSampler
-
-from albumentations import *
-from albumentations.pytorch import ToTensorV2
 
 from dataset import MaskDataset, TestDataset
 from model import CustomModel
@@ -45,7 +42,7 @@ def train(data) :
     print(f'{device} is using !')
 
     LEARNING_RATE = 0.0001
-    NUM_EPOCH = 100
+    NUM_EPOCH = 5
 
     data_path = data['img_path']
     target = np.array(data['label'])
@@ -53,6 +50,9 @@ def train(data) :
     gender_list = np.array(data['gender'])
     mask_list = np.array(data['stem'])
 
+    from albumentations import Compose, Resize, Normalize, HorizontalFlip, RandomBrightnessContrast, GaussNoise, CLAHE, Equalize, ShiftScaleRotate
+    from albumentations.pytorch import ToTensorV2
+    
     model = CustomModel(18)
     stf = StratifiedKFold(n_splits = 4, shuffle = True, random_state =42)
 
@@ -175,6 +175,7 @@ def train(data) :
     image_dir = os.path.join(test_dir, 'images')
 
     from torchvision import transforms, utils
+    from torchvision.transforms import Resize, ToTensor, Normalize
 
     image_paths = [os.path.join(image_dir, img_id) for img_id in submission.ImageID]
     transform = transforms.Compose([
