@@ -204,6 +204,7 @@ def train(data) :
     print('test inference is done!')
 
 if __name__ == '__main__' :
-    data = pd.read_csv('/opt/ml/final/최종.csv')
+    #data = pd.read_csv('/opt/ml/final/최종.csv')
+    data = pd.read_csv('./최종.csv')
     seed_everything(42)
     train(data)
