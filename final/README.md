@@ -7,6 +7,8 @@
 - `CUDA==11.0`
 ### Install Requirements
 - `pip install -r requirements.txt`
+### Hardware
+- GPU : Tesla V100
 
 ### Training & Inference
 ```
@@ -15,8 +17,7 @@ python train.py --config {config_path}
 # python train.py --optimizer Adam --epochs 10
 ```
 
-### Hardware
-- GPU : Tesla V100
+
 
 ### Arguments Usage
 - --seed
