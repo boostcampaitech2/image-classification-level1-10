@@ -32,7 +32,7 @@ class LabelSmoothingLoss(nn.Module) :
         with torch.no_grad() :
             true_dist = torch.zeros_like(pred)
             true_dist.fille_(self.smoothing / (self.cls - 1))
-            true_dist.scatter_(1, target.data.unsqueeze(1), self.confidence) # 이해하기 어렵
+            true_dist.scatter_(1, target.data.unsqueeze(1), self.confidence) 
         return torch.mean(torch.sum(-true_dist * pred, dim = self.dim))
 
 class F1Loss(nn.Module) :
@@ -77,7 +77,7 @@ def create_criterion(criterion_name, **kwargs) :
         create_fn = criterion_entrypoint(criterion_name)
         criterion = create_fn(**kwargs)
     else :
-        raise RuntimeError('Unknown loss (%s)' % criterion_name) # 문자열이 아닐 경우에 에러발생시키기 위해서??
+        raise RuntimeError('Unknown loss (%s)' % criterion_name) 
     return criterion
 
 
