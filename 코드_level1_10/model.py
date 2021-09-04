@@ -8,7 +8,7 @@ class CustomModel(nn.Module) :
     def __init__(self, num_classes) :
         super().__init__()
 
-        self.resnext = torchvision.models.resnext50_32x4d(pretrained = True)
+        self.resnext = torchvision.models.resnext50_32x4d(pretrained = True) # Output Channel = 2048, Target classes = 18
         self.final_layer = nn.Sequential(
             nn.Linear(2048, 1024, bias = True),
             nn.ReLU(inplace = True),
