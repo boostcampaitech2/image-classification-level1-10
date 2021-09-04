@@ -9,7 +9,11 @@
 - `pip install -r requirements.txt`
 
 ### Training & Inference
-- `python train.py`
+```
+python train.py --config {config_path}
+# like Underline
+# python train.py --optimizer Adam
+```
 
 ### Hardware
 - GPU : Tesla V100
