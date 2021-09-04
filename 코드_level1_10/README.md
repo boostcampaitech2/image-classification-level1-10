@@ -1,23 +1,22 @@
 # pstage_01_image_classification
-
-## Getting Started    
-### Dependencies
+ 
+## Dependencies
 - `torch==1.7.0`
 - `torchvision==0.7.0`                                                              
 - `CUDA==11.0`
-### Install Requirements
+## Install Requirements
 - `pip install -r requirements.txt`
-### Hardware
+## Hardware
 - `GPU : Tesla V100`
 
-### Training & Inference
-#### Structure
+## Training & Inference
+### Structure
 - **dataset.py** : Dataset 구조 정의 및 Augmentation 정의
 - **loss.py** : Image Classification에 사용될 수 있는 다양한 Loss 정의
 - **model.py** : 학습과 추론에 이용될 다양한 모델을 구성
 - **train.py** : 학습을 위한 파이프라인 구충 및 검증데이터에 대한 평가 진행
 
-#### Implementation
+### Implementation
 In Terminal
 ```
 python train.py --config {config_path}
@@ -26,7 +25,7 @@ python train.py --config {config_path}
 ```
 
 
-### Arguments Usage
+## Arguments Usage
 - --seed
   - 랜덤에 사용될 시드
   - type = int
