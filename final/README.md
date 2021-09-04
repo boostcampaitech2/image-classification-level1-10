@@ -11,6 +11,9 @@
 ### Training & Inference
 - `python train.py`
 
+### Hardware
+- GPU : Tesla V100
+
 ### Arguments Usage
 - --seed
   - 랜덤에 사용될 시드
