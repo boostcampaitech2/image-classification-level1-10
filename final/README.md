@@ -12,7 +12,7 @@
 ```
 python train.py --config {config_path}
 # like Underline
-# python train.py --optimizer Adam
+# python train.py --optimizer Adam --epochs 10
 ```
 
 ### Hardware
