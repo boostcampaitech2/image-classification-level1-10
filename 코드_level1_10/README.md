@@ -12,10 +12,10 @@
 
 ### Training & Inference
 #### Structure
-- dataset.py : Dataset 구조 정의 및 Augmentation 정의
-- loss.py : Image Classification에 사용될 수 있는 다양한 Loss 정의
-- model.py : 학습과 추론에 이용될 다양한 모델을 구성
-- train.py : 학습을 위한 파이프라인 구충 및 검증데이터에 대한 평가 진행
+- **dataset.py** : Dataset 구조 정의 및 Augmentation 정의
+- **loss.py** : Image Classification에 사용될 수 있는 다양한 Loss 정의
+- **model.py** : 학습과 추론에 이용될 다양한 모델을 구성
+- **train.py** : 학습을 위한 파이프라인 구충 및 검증데이터에 대한 평가 진행
 
 #### Implementation
 In Terminal
