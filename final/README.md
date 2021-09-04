@@ -2,9 +2,9 @@
 
 ## Getting Started    
 ### Dependencies
-- torch==1.7.0
-- torchvision==0.7.0                                                              
-
+- `torch==1.7.0`
+- `torchvision==0.7.0`                                                              
+- `CUDA==11.0`
 ### Install Requirements
 - `pip install -r requirements.txt`
 
