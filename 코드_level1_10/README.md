@@ -58,3 +58,4 @@ python train.py --config {config_path}
 |--criterion|str|cross_entropy|학습의 loss function|
 |--optimizer|str|SGD|학습의 optimizer|
 |--scheduler|str|StepLR|learning rate를 조절하는 스케쥴러|
+
