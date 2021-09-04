@@ -24,8 +24,19 @@ python train.py --config {config_path}
 # python train.py --optimizer Adam --epochs 10
 ```
 
-
 ## Arguments Usage
+|Argument|type|Defualt|Explanation|
+|---|---|---|---|
+|--seed|int|42|랜덤에 사용될 시드넘버|
+|--epochs|int|5|학습 epoch|
+|--dataset|str|MaskDataset|학습에 사용할 데이터셋|
+|--lr|float|1e-4|학습의 learning rate|
+|--model|str|CustomModel|학습에 사용할 모델|
+|--batch_size|int|64|학습의 batch size|
+|--valid_batch_size|int|64|검증의 batch size|
+|--criterion|str|cross_entropy|학습의 loss function|
+|--optimizer|str|SGD|학습의 optimizer|
+|--scheduler|str|StepLR|learning rate를 조절하는 스케쥴러|
 - --seed
   - 랜덤에 사용될 시드
   - type = int
