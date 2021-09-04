@@ -9,6 +9,27 @@
 ## Hardware
 - `GPU : Tesla V100`
 
+## Dataset
+**Note :** Dataset의 경우, 보안상의 이유로 공개할 수 없다.
+- 이미지 개수 : 전체 4500명에 대하여, 각 7장(마스크 착용5, 이상하게 착용1, 미착용1)의 Image Data 사용. 이 중 60%(18900)을 학습 데이터셋으로 활용한다.
+- 이미지 크기 : (384, 512)
+
+데이터 경로는 다음과 같다.
+```
+datadir (= 'images')
+    +- person1 image folder ( = '000001_female_Asian_45')
+    |   +- mask1.jpg
+    |   +- mask2.jpg
+    |   +- mask3.jpg
+    |   +- mask4.jpg
+    |   +- mask5.jpg
+    |   +- incorrect_mask.jpg
+    |   +- normal.jpg
+    +- person2 image folder
+        ...
+>> 확장자의 경우 jpg 외에 다양한 확장자가 존재.
+```
+
 ## Training & Inference
 ### Structure
 - **dataset.py** : Dataset 구조 정의 및 Augmentation 정의
