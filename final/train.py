@@ -19,9 +19,6 @@ from torch.utils.data import Dataset, DataLoader
 from dataset import TestDataset
 from loss import create_criterion
 
-from albumentations import Compose, Resize, Normalize, HorizontalFlip, RandomBrightnessContrast, GaussNoise, CLAHE, Equalize, ShiftScaleRotate
-from albumentations.pytorch import ToTensorV2
-
 def seed_everything(seed) :
     torch.manual_seed(seed)
     torch.cuda.manual_seed(seed)
@@ -51,6 +48,10 @@ def train(data) :
     model = model_module(
         num_classes = len(set(target)) # 클래스의 개수
     ).to(device)
+
+    # -- Augmentation 적용하기 위하여 Import
+    from albumentations import Compose, Resize, Normalize, HorizontalFlip, RandomBrightnessContrast, GaussNoise, CLAHE, Equalize, ShiftScaleRotate
+    from albumentations.pytorch import ToTensorV2
 
     # -- Augmentation 기법
     transform = Compose([
