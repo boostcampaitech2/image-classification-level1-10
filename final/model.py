@@ -3,7 +3,6 @@ import numpy as np
 import torch
 import torchvision
 import torch.nn as nn
-import torch.nn.functional as F
 
 class CustomModel(nn.Module) :
     def __init__(self, num_classes) :
