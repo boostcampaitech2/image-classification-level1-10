@@ -8,7 +8,7 @@
 ### Install Requirements
 - `pip install -r requirements.txt`
 ### Hardware
-- GPU : Tesla V100
+- `GPU : Tesla V100`
 
 ### Training & Inference
 ```
