@@ -13,6 +13,10 @@ class MaskDataset(Dataset) :
         self.transform = transform
         self.aug_transform = aug_transform
         
+        '''
+         데이터 불균형 문제를 해결하고자 age, gender, mask에 따라 data augmentation적용 횟수를 다르게 해주었다. 
+         이때 need(train, test)에 따라서 data augmentation을 적용 여부가 달라진다.
+        '''
         for path, label, age, gender, mask in tqdm(zip(path_list, label_list, age_list, gender_list, mask_list)) :
             image = Image.open(path)
             self.X.append(image)
